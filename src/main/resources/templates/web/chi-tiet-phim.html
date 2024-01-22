@@ -151,7 +151,7 @@
                 <div class="movie-item" th:each="movieRelated , iterStat : ${moviesRelated}" th:if="${iterStat.index < 2}">
                     <div class="movie-poster rounded overflow-hidden">
                         <img th:src="${movieRelated.poster}" alt=""
-                             class="w-100 h-100">
+                             class="w-100 " style="height: 100px">
                     </div>
                     <p class="mt-2" th:text="${movieRelated.title}">Chào Mừng Đến Samdalri</p>
                     <p class="mt-2" th:text="${movieRelated.releaseYear}">2000</p>
@@ -231,7 +231,7 @@
                 <div class="movie-item">
                     <div class="movie-poster rounded overflow-hidden">
                         <img th:src="${movieRelated.poster}" alt=""
-                             class="w-100 h-100">
+                             class="w-100 " style="height: 100px">
                     </div>
                     <p class="mt-2" th:text="${movieRelated.title}">Chào Mừng Đến Samdalri</p>
                     <p class="mt-2" th:text="${movieRelated.releaseYear}">2000</p>
@@ -312,7 +312,7 @@
         <div class="row">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
-                    <img src="./image/teemo1.webp" alt="" style="height: 100px; width: 100px;">
+                    <img src="/image/teemo1.webp" alt="" style="height: 100px; width: 100px;">
                     <img src="https://motchillzzz.com/_ipx/f_webp&s_200x52/logo.png" alt="">
 
 

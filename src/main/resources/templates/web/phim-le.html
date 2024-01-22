@@ -60,7 +60,7 @@
             <div class="col-3" th:each="movieRelated, iterStat:${moviesRelated}" th:if="${iterStat.index < 4}" >
                 <div class="movie-item">
                     <div class="movie-poster rounded overflow-hidden">
-                        <img th:src="${movieRelated.poster}" alt="" class="w-100 h-100">
+                        <img th:src="${movieRelated.poster}" alt="" class="w-100 "style="height: 100px">
                     </div>
                     <p class="mt-2" th:text="${movieRelated.title}">Chào Mừng Đến Samdalri</p>
                     <p class="mt-2" th:text="${movieRelated.releaseYear}">2000</p>
@@ -84,7 +84,7 @@
             <div class="col-2 " th:each="movieRelated, iterStat:${moviesRelated}" th:if="${iterStat.index >= 4 && iterStat.index < 10}">
                 <div class="movie-item">
                     <div class="movie-poster rounded overflow-hidden">
-                        <img th:src="${movieRelated.poster}" alt="" class="w-100 h-100">
+                        <img th:src="${movieRelated.poster}" alt="" class="w-100 " style="height: 100px">
                     </div>
                     <p class="mt-2" th:text="${movieRelated.title}">Chào Mừng Đến Samdalri</p>
                     <p class="mt-2" th:text="${movieRelated.releaseYear}">2000</p>
@@ -106,7 +106,7 @@
             <div class="col-2 " th:each="moviePL, iterStat:${moviesPL}" th:if="${iterStat.index < 18}">
                 <div class="movie-item">
                     <div class="movie-poster rounded overflow-hidden">
-                        <img th:src="${moviePL.poster}" alt="" class="w-100 h-100">
+                        <img th:src="${moviePL.poster}" alt="" class="w-100 " style="height: 100px">
                     </div>
                     <p class="mt-2" th:text="${moviePL.title}">Chào Mừng Đến Samdalri</p>
                     <p class="mt-2" th:text="${moviePL.releaseYear}">2000</p>

@@ -24,3 +24,7 @@
     height: 40px;
     border-radius: 50%;
 }
+a {
+    text-decoration: none; /* Loại bỏ gạch chân */
+    color: #000; /* Đặt màu chữ mặc định, ví dụ là đen (#000) */
+}

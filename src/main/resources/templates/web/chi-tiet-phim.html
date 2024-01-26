@@ -15,7 +15,7 @@
 <header>
     <nav class="navbar navbar-expand-lg bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" th:href="@{/}">
                 <!-- <img src="./image/teemo1.webp" alt=""> -->
                 <img src="/image/teemo1.webp" alt="" style="height: 100px; width: 100px;">
                 <img src="https://motchillzzz.com/_ipx/f_webp&s_200x52/logo.png" alt="">
@@ -27,10 +27,10 @@
             </button>
             <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-link text-white fs-5" href="#">Trang chủ</a>
-                    <a class="nav-link text-white fs-5" href="#">Phim bộ</a>
-                    <a class="nav-link text-white fs-5" href="#">Phim chiếu rạp</a>
-                    <a class="nav-link text-white fs-5" href="#">Phim lẻ</a>
+                    <a class="nav-link text-white fs-5" th:href="@{/}">Trang chủ</a>
+                    <a class="nav-link text-white fs-5" th:href="@{/phim-bo}">Phim bộ</a>
+                    <a class="nav-link text-white fs-5" th:href="@{/phim-chieu-rap}">Phim chiếu rạp</a>
+                    <a class="nav-link text-white fs-5" th:href="@{/phim-le}">Phim lẻ</a>
                 </div>
 
                 <div id="advc-menu" class="search">
@@ -247,66 +247,36 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="mb-3">Tin tức</h3>
-            <a href="#">Xem thêm</a>
+            <a th:href="@{/danh-sach-blog}">Xem thêm</a>
         </div>
 
 
-        <div class="row">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-1">
-                        <div class="text-center">
-                            <p class="fs-1 fw-bold text-primary mb-1">5</p>
-                            <p>March</p>
-                        </div>
-                    </div>
-                    <div class="col-11">
-                        <h3>Top 12 phim ngôn tình Trung Quốc hay không nên bỏ qua</h3>
-                        <p>List những bộ phim ngôn tình Trung Quốc lãng mạn sẽ khiến tâm hồn bạn trở nên ngọt ngào. Tham
-                            khảo ngay top phim tình cảm Trung Quốc đã được phimmoi liệt kê bên dưới nhé! Thầm ...</p>
-                    </div>
+        <div class="row" th:each="blog: ${blogs}">
+            <div class="col-1">
+                <div class="text-center">
+                    <p class="fs-1 fw-bold text-primary mb-1" th:text="${blog.publishedAt.getDay()}">5</p>
+                    <p th:text="${blog.publishedAt.getYear()+1900} +'-'+
+                            ${blog.publishedAt.getMonth()} + '-' + ${blog.publishedAt.getDay()}">March</p>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-1">
-                        <div class="text-center">
-                            <p class="fs-1 fw-bold text-primary mb-1">5</p>
-                            <p>March</p>
-                        </div>
-                    </div>
-                    <div class="col-11">
-                        <h3>Top 12 phim ngôn tình Trung Quốc hay không nên bỏ qua</h3>
-                        <p>List những bộ phim ngôn tình Trung Quốc lãng mạn sẽ khiến tâm hồn bạn trở nên ngọt ngào. Tham
-                            khảo ngay top phim tình cảm Trung Quốc đã được phimmoi liệt kê bên dưới nhé! Thầm ...</p>
-                    </div>
-                </div>
+            <div class="col-11">
+                <h3 th:text="${blog.title}">Top 12 phim ngôn tình Trung Quốc hay không nên bỏ qua</h3>
+                <p th:text="${blog.description}">List những bộ phim ngôn tình Trung Quốc lãng mạn sẽ khiến tâm hồn bạn trở nên ngọt ngào. Tham
+                    khảo ngay top phim tình cảm Trung Quốc đã được phimmoi liệt kê bên dưới nhé! Thầm ...</p>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-1">
-                        <div class="text-center">
-                            <p class="fs-1 fw-bold text-primary mb-1">5</p>
-                            <p>March</p>
-                        </div>
-                    </div>
-                    <div class="col-11">
-                        <h3>Top 12 phim ngôn tình Trung Quốc hay không nên bỏ qua</h3>
-                        <p>List những bộ phim ngôn tình Trung Quốc lãng mạn sẽ khiến tâm hồn bạn trở nên ngọt ngào. Tham
-                            khảo ngay top phim tình cảm Trung Quốc đã được phimmoi liệt kê bên dưới nhé! Thầm ...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+
+
 
 
     </div>
 
 </section>
+
+
+
+
 <footer class="bg-dark-subtle" style="border-top: 1px solid #454545;">
     <div class="container">
         <div class="row">

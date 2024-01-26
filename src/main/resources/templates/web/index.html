@@ -15,7 +15,7 @@
 <header>
     <nav class="navbar navbar-expand-lg bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" th:href="@{/}">
                 <!-- <img src="./image/teemo1.webp" alt=""> -->
                 <img src="/image/teemo1.webp" alt="" style="height: 100px; width: 100px;">
                 <img src="https://motchillzzz.com/_ipx/f_webp&s_200x52/logo.png" alt="">
@@ -27,10 +27,10 @@
             </button>
             <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-link text-white fs-5" href="#">Trang chủ</a>
-                    <a class="nav-link text-white fs-5" href="#">Phim bộ</a>
-                    <a class="nav-link text-white fs-5" href="#">Phim chiếu rạp</a>
-                    <a class="nav-link text-white fs-5" href="#">Phim lẻ</a>
+                    <a class="nav-link text-white fs-5" th:href="@{/}">Trang chủ</a>
+                    <a class="nav-link text-white fs-5" th:href="@{/phim-bo}">Phim bộ</a>
+                    <a class="nav-link text-white fs-5" th:href="@{/phim-chieu-rap}">Phim chiếu rạp</a>
+                    <a class="nav-link text-white fs-5" th:href="@{/phim-le}">Phim lẻ</a>
                 </div>
 
                 <div id="advc-menu" class="search">
@@ -58,60 +58,62 @@
 
 
         <div class="row">
-            <div class="col-4 " th:each="movieHot, iterStat:${moviesHot}" th:if="${iterStat.index < 6}" >
-                <div class="movie-item " >
-                    <div class="movie-poster rounded overflow-hidden ">
-                        <img th:src="${movieHot.poster}" alt="" class="w-100" style="height: 100px">
+            <div class="col-4 " th:each="movieHot, iterStat:${moviesHot}" th:if="${iterStat.index < 6}">
+                <a th:href="@{/phim/{id}/{slug} (id=${movieHot.id}, slug=${movieHot.slug})}"
+                   class="movie-media" style="color: black ; text-decoration: none">
+                    <div class="movie-item ">
+                        <div class="movie-poster rounded overflow-hidden ">
+                            <img th:src="${movieHot.poster}" alt="" class="w-100">
+                        </div>
+                        <div>
+                            <p class="mt-2" th:text="${movieHot.title}">Chào Mừng Đến Samdalri</p>
+                            <p class="mt-2" th:text="${movieHot.releaseYear}">2000</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="mt-2" th:text="${movieHot.title}">Chào Mừng Đến Samdalri</p>
-                        <p class="mt-2" th:text="${movieHot.releaseYear}">2000</p>
-
-                    </div>
-
-
-                </div>
+                </a>
             </div>
-<!--            <div class="col-4">-->
-<!--                <div class="movie-item">-->
-<!--                    <div class="movie-poster rounded overflow-hidden">-->
-<!--                        <img src="https://image.motchillzzz.com/avatar/welcome-to-samdalri-x350.webp" alt="" class="w-100 h-100">-->
-<!--                    </div>-->
-<!--                    <p class="mt-2">Chào Mừng Đến Samdalri</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-4">-->
-<!--                <div class="movie-item">-->
-<!--                    <div class="movie-poster rounded overflow-hidden">-->
-<!--                        <img src="https://image.motchillzzz.com/avatar/welcome-to-samdalri-x350.webp" alt="" class="w-100 h-100">-->
-<!--                    </div>-->
-<!--                    <p class="mt-2">Chào Mừng Đến Samdalri</p>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--            <div class="col-4">-->
+            <!--                <div class="movie-item">-->
+            <!--                    <div class="movie-poster rounded overflow-hidden">-->
+            <!--                        <img src="https://image.motchillzzz.com/avatar/welcome-to-samdalri-x350.webp" alt="" class="w-100 h-100">-->
+            <!--                    </div>-->
+            <!--                    <p class="mt-2">Chào Mừng Đến Samdalri</p>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--            <div class="col-4">-->
+            <!--                <div class="movie-item">-->
+            <!--                    <div class="movie-poster rounded overflow-hidden">-->
+            <!--                        <img src="https://image.motchillzzz.com/avatar/welcome-to-samdalri-x350.webp" alt="" class="w-100 h-100">-->
+            <!--                    </div>-->
+            <!--                    <p class="mt-2">Chào Mừng Đến Samdalri</p>-->
+            <!--                </div>-->
+            <!--            </div>-->
         </div>
     </div>
 </section>
 
 <section class=" py-4 bg-dark-subtle">
-                    <div class="container">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h3 class="mb-3">Phim chiếu rạp</h3>
-                            <a href="#">Xem thêm</a>
-                        </div>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-3">Phim chiếu rạp</h3>
+            <a href="#">Xem thêm</a>
+        </div>
 
-                        <div class="row">
-                            <div class="col-2 " th:each="moviePCR, iterStat:${moviesPCR}" th:if="${iterStat.index < 6}" >
-                                <div class="movie-item ">
-                                    <div class="movie-poster rounded overflow-hidden ">
-                                        <img th:src="${moviePCR.poster}" alt="" class="w-100 " style="height: 100px">
-                                    </div>
-                                    <p class="mt-2" th:text="${moviePCR.title}">Chào Mừng Đến Samdalri</p>
-                                    <p class="mt-2" th:text="${moviePCR.releaseYear}">2000</p>
-                                </div>
-                            </div>
-
-                        </div>
+        <div class="row">
+            <div class="col-2 " th:each="moviePCR, iterStat:${moviesPCR}" th:if="${iterStat.index < 6}">
+                <a th:href="@{/phim/{id}/{slug} (id=${moviePCR.id}, slug=${moviePCR.slug})}"
+                   class="movie-media" style="color: black ; text-decoration: none">
+                <div class="movie-item ">
+                    <div class="movie-poster rounded overflow-hidden ">
+                        <img th:src="${moviePCR.poster}" alt="" class="w-100 ">
                     </div>
+                    <p class="mt-2" th:text="${moviePCR.title}">Chào Mừng Đến Samdalri</p>
+                    <p class="mt-2" th:text="${moviePCR.releaseYear}">2000</p>
+                </div></a>
+            </div>
+
+        </div>
+    </div>
 </section>
 
 <section class="py-4 bg-dark-subtle">
@@ -123,14 +125,16 @@
 
         <div class="row">
 
-            <div class="col-2 " th:each="moviePB, iterStat:${moviesPB}" th:if="${iterStat.index < 6}" >
+            <div class="col-2 " th:each="moviePB, iterStat:${moviesPB}" th:if="${iterStat.index < 6}">
+                <a th:href="@{/phim/{id}/{slug} (id=${moviePB.id}, slug=${moviePB.slug})}"
+                   class="movie-media" style="color: black ; text-decoration: none">
                 <div class="movie-item ">
                     <div class="movie-poster rounded overflow-hidden ">
-                        <img th:src="${moviePB.poster}" alt="" class="w-100 " style="height: 100px">
+                        <img th:src="${moviePB.poster}" alt="" class="w-100 ">
                     </div>
                     <p class="mt-2" th:text="${moviePB.title}">Chào Mừng Đến Samdalri</p>
                     <p class="mt-2" th:text="${moviePB.releaseYear}">2000</p>
-                </div>
+                </div></a>
             </div>
 
         </div>
@@ -144,14 +148,16 @@
             <a href="#">Xem thêm</a>
         </div>
         <div class="row">
-            <div class="col-2 " th:each="moviePL, iterStat:${moviesPL}" th:if="${iterStat.index < 6}" >
+            <div class="col-2 " th:each="moviePL, iterStat:${moviesPL}" th:if="${iterStat.index < 6}">
+                <a th:href="@{/phim/{id}/{slug} (id=${moviePL.id}, slug=${moviePL.slug})}"
+                   class="movie-media" style="color: black ; text-decoration: none">
                 <div class="movie-item ">
                     <div class="movie-poster rounded overflow-hidden ">
-                        <img th:src="${moviePL.poster}" alt="" class="w-100 " style="height: 100px">
+                        <img th:src="${moviePL.poster}" alt="" class="w-100 ">
                     </div>
                     <p class="mt-2" th:text="${moviePL.title}">Chào Mừng Đến Samdalri</p>
                     <p class="mt-2" th:text="${moviePL.releaseYear}">2000</p>
-                </div>
+                </div></a>
             </div>
 
         </div>
@@ -164,59 +170,29 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="mb-3">Tin tức</h3>
-            <a href="#">Xem thêm</a>
+            <a th:href="@{/danh-sach-blog}">Xem thêm</a>
         </div>
 
 
         <div class="row">
             <div class="col-12">
-                <div class="row">
+
+                <div class="row" th:each="blog: ${blogs}">
                     <div class="col-1">
                         <div class="text-center">
-                            <p class="fs-1 fw-bold text-primary mb-1">5</p>
-                            <p>March</p>
+                            <p class="fs-1 fw-bold text-primary mb-1" th:text="${blog.publishedAt.getDay()}">5</p>
+                            <p th:text="${blog.publishedAt.getYear()+1900} +'-'+
+                            ${blog.publishedAt.getMonth()} + '-' + ${blog.publishedAt.getDay()}">March</p>
                         </div>
                     </div>
                     <div class="col-11">
-                        <h3>Top 12 phim ngôn tình Trung Quốc hay không nên bỏ qua</h3>
-                        <p>List những bộ phim ngôn tình Trung Quốc lãng mạn sẽ khiến tâm hồn bạn trở nên ngọt ngào. Tham
+                        <h3 th:text="${blog.title}">Top 12 phim ngôn tình Trung Quốc hay không nên bỏ qua</h3>
+                        <p th:text="${blog.description}">List những bộ phim ngôn tình Trung Quốc lãng mạn sẽ khiến tâm
+                            hồn bạn trở nên ngọt ngào. Tham
                             khảo ngay top phim tình cảm Trung Quốc đã được phimmoi liệt kê bên dưới nhé! Thầm ...</p>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-1">
-                        <div class="text-center">
-                            <p class="fs-1 fw-bold text-primary mb-1">5</p>
-                            <p>March</p>
-                        </div>
-                    </div>
-                    <div class="col-11">
-                        <h3>Top 12 phim ngôn tình Trung Quốc hay không nên bỏ qua</h3>
-                        <p>List những bộ phim ngôn tình Trung Quốc lãng mạn sẽ khiến tâm hồn bạn trở nên ngọt ngào. Tham
-                            khảo ngay top phim tình cảm Trung Quốc đã được phimmoi liệt kê bên dưới nhé! Thầm ...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-1">
-                        <div class="text-center">
-                            <p class="fs-1 fw-bold text-primary mb-1">5</p>
-                            <p>March</p>
-                        </div>
-                    </div>
-                    <div class="col-11">
-                        <h3>Top 12 phim ngôn tình Trung Quốc hay không nên bỏ qua</h3>
-                        <p>List những bộ phim ngôn tình Trung Quốc lãng mạn sẽ khiến tâm hồn bạn trở nên ngọt ngào. Tham
-                            khảo ngay top phim tình cảm Trung Quốc đã được phimmoi liệt kê bên dưới nhé! Thầm ...</p>
-                    </div>
-                </div>
+
             </div>
         </div>
 

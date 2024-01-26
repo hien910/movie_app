@@ -12,6 +12,6 @@
 - Trang Chi tiết phim
 ![](img_md/chiTietPhim.png)
 - Danh sách Blog
-![](img_md/chiTietBlog.png)
-- Chi tiết Blog
 ![](img_md/danhSachBlog.png)
+- Chi tiết Blog
+![](img_md/chiTietBlog.png)

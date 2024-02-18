@@ -71,6 +71,9 @@
                 </video>
             </div>
             <br>
+            <div>
+                <div id="movieId" th:data-movie-id="${movie.id}"></div>
+            </div>
 
             <div class="row py-4 ">
                 <div class="col-3">
@@ -102,9 +105,7 @@
                             <li><b>Thể loại: </b>
                                 <span>Hành động, khoa học viễn tưởng</span></li>
                             <br>
-                            <li><b>id</b>
-                                <span th:text="${movie.id}">8</span>/10
-                            </li>
+
 
                             <li>
                                 <b>Chọn tập phim: </b>

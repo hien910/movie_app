@@ -68,8 +68,9 @@ function submitReview() {
         });
         return response.json(); // parses JSON response into native JavaScript objects
     }
+    const movieId = document.getElementById("movieId").getAttribute("data-movie-id");
 
-    postData("http://localhost:8000/api/reviews", {rating: currentRating*2, comment: reviewText, movieId: 3}).then((data) => {
+    postData("http://localhost:8000/api/reviews", {rating: currentRating*2, comment: reviewText, movieId: movieId }).then((data) => {
         console.log(data);
     });
     closeModal();

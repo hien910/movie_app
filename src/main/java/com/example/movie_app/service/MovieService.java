@@ -35,4 +35,11 @@ public class MovieService   {
         PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("publishedAt").descending()); // page trong jpa bắt đầu từ 0
         return movieRepository.findByTypeAndStatus(movieType, status, pageRequest);
     }
+    public List<Movie> getRelatedMovies(Integer id, MovieType type, Boolean status, Integer size) {
+        return movieRepository
+                .findByTypeAndStatusAndRatingGreaterThanEqualAndIdNotOrderByRatingDescViewDescPublishedAtDesc(type, status, 5.0, id)
+                .stream()
+                .limit(size)
+                .toList();
+    }
 }

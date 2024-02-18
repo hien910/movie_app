@@ -1,13 +1,9 @@
 package com.example.movie_app;
 
-import com.example.movie_app.entity.Blog;
-import com.example.movie_app.entity.Movie;
-import com.example.movie_app.entity.User;
+import com.example.movie_app.entity.*;
 import com.example.movie_app.model.enums.MovieType;
 import com.example.movie_app.model.enums.UserRole;
-import com.example.movie_app.repository.BlogRepository;
-import com.example.movie_app.repository.MovieRepository;
-import com.example.movie_app.repository.UserRepository;
+import com.example.movie_app.repository.*;
 import com.github.javafaker.Faker;
 import com.github.slugify.Slugify;
 import org.junit.jupiter.api.Test;
@@ -29,6 +25,125 @@ class MovieAppApplicationTests {
 
     @Autowired
     private BlogRepository blogRepository;
+    @Autowired
+    private ActorRepository actorRepository;
+    @Autowired
+    private DirectorRepository directorRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
+    @Autowired
+    private GenreRepository genreRepository;
+    @Autowired
+    private EpisodeRepository episodeRepository;
+
+
+    @Test
+    void save_genres() {
+        Faker faker = new Faker();
+        Slugify slugify = Slugify.builder().build();
+        String name = faker.book().genre();
+        Random random = new Random();
+        for (int i = 0; i < 20; i++) {
+            Date createdAt = faker.date().birthday();
+            Genre genre = Genre.builder()
+                    .name(name)
+                    .slug(slugify.slugify(name))
+                    .createdAt(createdAt)
+                    .updatedAt(createdAt)
+                    .build();
+            genreRepository.save(genre);
+        }
+    }
+    @Test
+    void save_directors() {
+        Faker faker = new Faker();
+        for (int i = 0; i < 30; i++) {
+            String name = faker.name().fullName();
+            Director director = Director.builder()
+                    .name(name)
+                    .description(faker.lorem().paragraph())
+                    .avatar(generateLinkImage(name))
+                    .birthday(faker.date().birthday())
+                    .createdAt(new Date())
+                    .updatedAt(new Date())
+                    .build();
+            directorRepository.save(director);
+        }
+    }
+
+    @Test
+    void save_comments() {
+        Faker faker = new Faker();
+        Random random = new Random();
+
+        List<User> userList = userRepository.findAll();
+        List<Blog> blogList = blogRepository.findAll();
+
+        for (Blog blog : blogList) {
+            // Mỗi blog sẽ có 1 số lượng comment ngẫu nhiên từ 5 -> 10 comment
+            int numberOfComment = random.nextInt(5) + 5;
+            for (int i = 0; i < numberOfComment; i++) {
+                Comment comment = Comment.builder()
+                        .content(faker.lorem().paragraph())
+                        .user(userList.get(random.nextInt(userList.size())))
+                        .blog(blog)
+                        .createdAt(new Date())
+                        .updatedAt(new Date())
+                        .build();
+
+                commentRepository.save(comment);
+            }
+        }
+    }
+
+
+    @Test
+    void save_reviews() {
+        Faker faker = new Faker();
+        Slugify slugify = Slugify.builder().build();
+        Random random = new Random();
+        Date startDate = new Date(122, 0, 1);
+        Date endDate = new Date(124, 0, 1);
+
+        List<Movie> movieList = movieRepository.findMoviesByStatus(Boolean.TRUE);
+        List<User> userList = userRepository.findAll();
+        for (Movie movie : movieList) {
+            int numOfReview = random.nextInt(10) + 10;
+
+
+            for (int i = 0; i < numOfReview; i++) {
+
+                Date createdAt = faker.date().between(startDate, endDate);
+                Review review = Review.builder()
+                        .comment(faker.lorem().paragraph(50))
+                        .rating(faker.number().numberBetween(1, 10))
+                        .user(userList.get(random.nextInt(userList.size())))
+                        .movie(movie)
+                        .createdAt(createdAt)
+                        .updatedAt(createdAt)
+                        .build();
+                reviewRepository.save(review);
+
+            }
+        }
+    }
+
+
+    @Test
+    void save_actors() {
+        Faker faker = new Faker();
+
+        for (int i = 0; i < 30; i++) {
+            Actor actor = Actor.builder()
+                    .name(faker.leagueOfLegends().champion())
+                    .description(faker.lorem().paragraph(50))
+                    .build();
+            actorRepository.save(actor);
+        }
+
+    }
 
     @Test
     void save_users() {
@@ -37,7 +152,7 @@ class MovieAppApplicationTests {
 
         for (int i = 0; i < 30; i++) {
             Date createdAt = faker.date().birthday();
-            String name = faker.funnyName().name();
+            String name = faker.leagueOfLegends().champion();
             User user = User.builder()
                     .name(name)
                     .email(faker.internet().emailAddress())
@@ -122,6 +237,7 @@ class MovieAppApplicationTests {
             movieRepository.save(movie);
         }
     }
+
     public static String generateLinkImage(String str) {
         return "https://placehold.co/200x200?text=" + str.substring(0, 1).toUpperCase();
     }

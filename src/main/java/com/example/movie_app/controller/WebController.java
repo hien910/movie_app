@@ -3,11 +3,13 @@ package com.example.movie_app.controller;
 
 import com.example.movie_app.entity.Blog;
 import com.example.movie_app.entity.Movie;
+import com.example.movie_app.entity.Review;
 import com.example.movie_app.entity.User;
 import com.example.movie_app.model.enums.MovieType;
 
 import com.example.movie_app.service.BlogService;
 import com.example.movie_app.service.MovieService;
+import com.example.movie_app.service.ReviewService;
 import com.example.movie_app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.Normalizer;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -26,12 +29,12 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class WebController {
 
-    @Autowired
     private final MovieService movieService;
-    @Autowired
     private final UserService userService;
-    @Autowired
     private final BlogService blogService;
+    private final ReviewService reviewService;
+
+
 
 
 
@@ -96,6 +99,8 @@ public class WebController {
     @GetMapping("/phim/{id}/{slug}")
     public String getChiTietPhim(@PathVariable Integer id, @PathVariable String slug, Model model) {
         Movie movie = movieService.findMovieById(id);
+        List<Movie> relatedMovieList = movieService.getRelatedMovies(id, movie.getType(), true, 6);
+        List<Review> reviewList = reviewService.getReviewsByMovie(id);
 
         // Kiểm tra nếu không tìm thấy phim
         if (movie == null) {
@@ -114,6 +119,10 @@ public class WebController {
         model.addAttribute("movie", movie);
         model.addAttribute("blogs", blogService.findBlogByStatusOrderByPublishedAtDesc(true,1,3 ));
         model.addAttribute("moviesRelated", movieService.findMovieRelated(MovieType.valueOf(String.valueOf(movie.getType()))));
+
+        List<Review> reviews = reviewService.getReviewsByMovie(id);
+        model.addAttribute("reviews", reviews);
+
         return "web/chi-tiet-phim";
     }
 

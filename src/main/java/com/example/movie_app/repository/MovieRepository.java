@@ -25,6 +25,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
     List<Movie> findByTypeOrderByPublishAtDesc(MovieType movieType);
 //    @Query("SELECT m FROM Movie m WHERE m.id = :id AND m.status = true ")
     Movie findMovieByIdAndStatus(Integer id, Boolean status);
+    List<Movie> findMoviesByStatus(Boolean status);
 
 //    @Query("SELECT m FROM Movie m WHERE m.status = true  ORDER BY m.rating DESC")
 
@@ -38,6 +39,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
     Page<Movie> findByStatus(Boolean status, Pageable pageable);
 
     Optional<Movie> findByIdAndSlugAndStatus(Integer id, String slug, Boolean status);
+
 
     Movie findMovieById(Integer id);
     // Tìm kiếm movie theo title

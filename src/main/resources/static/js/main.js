@@ -50,9 +50,6 @@ function closeModal() {
 // Function to submit the review (you can customize this function based on your requirements)
 function submitReview() {
     const reviewText = document.getElementById('reviewTextarea').value;
-
-
-
     // Example POST method implementation:
     async function postData(url = "http://localhost:8000/api/reviews", data = {}) {
         // Default options are marked with *
@@ -78,4 +75,54 @@ function submitReview() {
 
 // Event listener for the button
 document.getElementById('openModalBtn').addEventListener('click', openModal);
+
+
+// Lắng nghe sự kiện click trên nút "Xóa"
+// document.querySelectorAll('.deleteModalBtn').forEach(function(button) {
+//     button.addEventListener('click', function () {
+//         // Lấy ID đánh giá từ phần tử div chứa cùng cấp
+//         const reviewId = this.closest('.review-container').querySelector('.reviewId').dataset.reviewId;
+//         console.log(reviewId);
+//
+//         // Kiểm tra xem ID có tồn tại không
+//         if (reviewId) {
+//             // Gọi hàm xóa đánh giá với ID đã thu được
+//             deleteReview(reviewId);
+//         } else {
+//             console.error('Không có ID đánh giá để xóa.');
+//         }
+//     });
+// });
+
+// Hàm xóa đánh giá
+// function deleteReview(reviewId) {
+//
+//     // Gửi yêu cầu DELETE đến API
+//     fetch(`http://localhost:8000/api/reviews/${reviewId}`, {
+//         method: 'DELETE',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             // Nếu cần, bạn có thể thêm các header khác ở đây
+//         },
+//         // body: JSON.stringify(data), // Nếu bạn cần gửi dữ liệu cùng với yêu cầu
+//     })
+//         .then(response => {
+//             // Kiểm tra xem yêu cầu đã thành công không
+//             if (!response.ok) {
+//                 throw new Error(`Xóa đánh giá không thành công. Mã lỗi: ${response.status}`);
+//             }
+//             // Trả về promise giải quyết với response json
+//             return response.json();
+//         })
+//         .then(data => {
+//             // Xử lý dữ liệu trả về nếu cần thiết
+//             console.log('Đánh giá đã được xóa thành công:', data);
+//             // Sau khi xóa thành công, bạn có thể thực hiện các bước khác nếu cần
+//         })
+//         .catch(error => {
+//             console.error('Lỗi khi xóa đánh giá:', error);
+//             // Xử lý lỗi nếu cần thiết
+//         });
+//     console.log('Đánh giá đã được xóa với ID: ' + reviewId);
+// }
 

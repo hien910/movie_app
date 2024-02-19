@@ -187,7 +187,7 @@
                 <div>
                     <div class="d-flex justify-content-between align-items-center">
                         <h3 class="mb-3">Bình luận</h3>
-                        <button class="btn btn-primary" id="openModalBtn">
+                        <button class="btn btn-success" id="openModalBtn">
                             Viết đánh giá
                         </button>
 
@@ -234,14 +234,29 @@
 
 
                             <div class="rating-info ms-3">
-                                <div class="d-flex align-items-center">
-                                    <p class="rating-name mb-0 font-size-lg">
+
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <p class="rating-name mb-0 font-size-lg">
                                         <strong th:text="${review.user.name}">Bùi Hiên</strong>
                                     </p>
-                                    <p class="rating-time mb-0 ms-2"
-                                       th:text="${#dates.format(review.createdAt, 'dd/MM/yyyy')}">
-                                        09/01/2024</p>
+                                        <p class="rating-time mb-0 ms-2"
+                                           th:text="${#dates.format(review.createdAt, 'dd/MM/yyyy')}">
+                                            09/01/2024</p>
+                                    </div>
+
+                                    <div>
+                                        <button class="btn btn-primary" id="fixModalBtn">
+                                            Chỉnh sửa
+                                        </button>
+
+                                        <button class="btn btn-danger" id="deleteModalBtn">
+                                            Xóa
+                                        </button>
+<!--                                        div class="reviewId" th:data-review-id="${review.id}"></div><-->
+                                    </div>
                                 </div>
+
                                 <div class="rating-star">
                                     <p class="mb-0 fw-bold">
                                         <span class="rating-icon" th:each="star: ${#numbers.sequence(0, (review.rating div 2) - 1)}">
@@ -250,6 +265,7 @@
                                         <span th:text="${review.rating} + '/10'">9/10 Tuyệt vời</span>
                                     </p>
                                 </div>
+
                                 <p class="rating-content mt-1 mb-0 text-muted" th:text="${review.comment}">Phim xem ổn.
                                     Điểm
                                     nhấn chính là sự hài hước và
@@ -261,39 +277,6 @@
 
                             </div>
                         </div>
-
-
-                        <div class="rating-item d-flex align-items-center mb-3 pb-3">
-                            <div class="rating-avatar">
-                                <img src="https://placehold.co/200x200?text=E" alt="Eleanora
-Doyle">
-                            </div>
-                            <div class="rating-info ms-3">
-                                <div class="d-flex align-items-center">
-                                    <p class="rating-name mb-0">
-                                        <strong>Eleanora
-                                            Doyle</strong>
-                                    </p>
-                                    <p class="rating-time mb-0 ms-2">02/05/2023</p>
-                                </div>
-                                <div class="rating-star">
-                                    <p class="mb-0 fw-bold">
-                                        <span class="rating-icon"><i class="fa fa-star"></i></span>
-                                        <span>10/10 Xuất sắc</span>
-                                    </p>
-                                </div>
-                                <p class="rating-content mt-1 mb-0 text-muted">kì vọng như Bỗng Dưng Trúng Số nhưng thất
-                                    vọng.
-                                    -
-                                    Time phim ngắn nên logic phim k hợp lý, cắt gọn quá mức, chi
-                                    tiết tại sao nhân vật phản diện bị bắt? 2 anh em sinh đôi có
-                                    bị chịu tội pháp luật không?
-                                    - Chi tiết gây cười có, nhưng
-                                    có những phân đoạn không...Xem thêm</p>
-
-                            </div>
-                        </div>
-
 
                     </div>
                 </div>

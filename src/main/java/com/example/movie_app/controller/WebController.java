@@ -11,6 +11,7 @@ import com.example.movie_app.service.BlogService;
 import com.example.movie_app.service.MovieService;
 import com.example.movie_app.service.ReviewService;
 import com.example.movie_app.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ public class WebController {
     private final UserService userService;
     private final BlogService blogService;
     private final ReviewService reviewService;
+    private final HttpSession httpSession;
 
 
 
@@ -99,21 +101,20 @@ public class WebController {
     @GetMapping("/phim/{id}/{slug}")
     public String getChiTietPhim(@PathVariable Integer id, @PathVariable String slug, Model model) {
         Movie movie = movieService.findMovieById(id);
-        List<Movie> relatedMovieList = movieService.getRelatedMovies(id, movie.getType(), true, 6);
         List<Review> reviewList = reviewService.getReviewsByMovie(id);
 
-        // Kiểm tra nếu không tìm thấy phim
-        if (movie == null) {
-            // Xử lý trường hợp không tìm thấy, có thể redirect hoặc hiển thị trang lỗi
-            return "redirect:/error"; // hoặc "web/error-page"
-        }
-        String titleSlug = SlugUtils.createSlug(movie.getTitle());
-
-        // Kiểm tra xem slug từ movie.title có khớp với slug truyền vào hay không
-        if (!slug.equals(titleSlug)) {
-            // Xử lý trường hợp slug không khớp, có thể redirect hoặc hiển thị trang lỗi
-            return "redirect:/error"; // hoặc "web/error-page"
-        }
+//        // Kiểm tra nếu không tìm thấy phim
+//        if (movie == null) {
+//            // Xử lý trường hợp không tìm thấy, có thể redirect hoặc hiển thị trang lỗi
+//            return "redirect:/error"; // hoặc "web/error-page"
+//        }
+//        String titleSlug = SlugUtils.createSlug(movie.getTitle());
+//
+//        // Kiểm tra xem slug từ movie.title có khớp với slug truyền vào hay không
+//        if (!slug.equals(titleSlug)) {
+//            // Xử lý trường hợp slug không khớp, có thể redirect hoặc hiển thị trang lỗi
+//            return "redirect:/error"; // hoặc "web/error-page"
+//        }
 
         // Truyền thông tin phim đến view thông qua model
         model.addAttribute("movie", movie);
@@ -149,21 +150,23 @@ public class WebController {
 
         return "web/detail-blog";
     }
-
-
-
-
-    public static class SlugUtils {
-
-        private static final Pattern NON_LATIN = Pattern.compile("[^\\w-]");
-        private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
-
-        public static String createSlug(String input) {
-            String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
-            String normalized = Normalizer.normalize(nowhitespace, Normalizer.Form.NFD);
-            String slug = NON_LATIN.matcher(normalized).replaceAll("");
-            return slug.toLowerCase(Locale.ENGLISH);
+    @GetMapping("/dang-ky")
+    public String getDangKyPage() {
+        User user = (User) httpSession.getAttribute("currentUser");
+        if (user != null) {
+            return "redirect:/";
         }
+        return "web/dang-ky";
     }
+
+    @GetMapping("/dang-nhap")
+    public String getDangNhapPage() {
+        User user = (User) httpSession.getAttribute("currentUser");
+        if (user != null) {
+            return "redirect:/";
+        }
+        return "web/dang-nhap";
+    }
+
 
 }

@@ -1,30 +1,35 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${movie.title}">Chi tiết phim</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-
-
+    <link rel="shortcut icon" href="/image/teemo1.webp" type="image/x-icon">
+    <link rel="icon" href="/image/teemo1.webp" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+          integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.css"
+          integrity="sha512-K1k7jSn9RDKEcn/ugqVVvWYu0bcS3q1w6m/5pQSnrj0bCfIqF6Wk49lkmckSb4wglvTP9V17LtS0q0XxYccXbg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="/css/style.css">
-</head>
 
+</head>
 <body>
+
 <header>
     <nav class="navbar navbar-expand-lg bg-dark">
         <div class="container">
             <a class="navbar-brand" th:href="@{/}">
                 <!-- <img src="./image/teemo1.webp" alt=""> -->
                 <img src="/image/teemo1.webp" alt="" style="height: 100px; width: 100px;">
-                <img src="https://motchillzzz.com/_ipx/f_webp&s_200x52/logo.png" alt="">
+                <img src="/image/logo.png" alt="" style="height: 50px; width: 168px;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
@@ -58,291 +63,202 @@
     </nav>
 </header>
 
-<section class="py-4 bg-dark-subtle">
+<section class="py-4">
     <div class="container">
-        <h3 class="mb-3" th:text="${movie.title}">
-            <a href="#" class="text-decoration-none text-dark">Phim lẻ ></a> Vệ sĩ tuyệt đẹp</h3>
-
-        <div class="row">
-            <div class="video">
-                <video width="1315" height="720" controls>
-                    <source src=" " type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-primary" href="/">Trang chủ</a></li>
+                <li class="breadcrumb-item">
+                    <a th:switch="${movie.type.value}">
+                        <a class="text-primary" th:case="'Phim lẻ'" href="/phim-le">Phim lẻ</a>
+                        <a class="text-primary" th:case="'Phim bộ'" href="/phim-bo">Phim bộ</a>
+                        <a class="text-primary" th:case="'Phim chiếu rạp'" href="/phim-chieu-rap">Phim chiếu rạp</a>
+                        <a class="text-primary" th:case="*" href="#">Không xác định</a> <!-- Trường hợp mặc định -->
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page" th:text="${movie.title}">Đầu Gấu Đụng Đầu Đất
+                </li>
+            </ol>
+        </nav>
+        <div class="row mt-4">
+            <div class="col-3">
+                <img id="movie-poster" class="rounded w-100"
+                     th:src="${movie.poster}" th:alt="${movie.title}">
             </div>
-            <br>
-            <div>
-                <div id="movieId" th:data-movie-id="${movie.id}"></div>
-            </div>
-
-            <div class="row py-4 ">
-                <div class="col-3">
-                    <div class="movie-item">
-                        <div class="movie-poster rounded overflow-hidden">
-                            <img th:src="${movie.poster}"
-                                 alt="" class="w-100 h-100">
+            <div class="col-9">
+                <h4 class="mb-3" th:text="${movie.title}">Đầu Gấu Đụng Đầu Đất</h4>
+                <div class="p-3 bg-body-tertiary">
+                    <div class="row">
+                        <div class="col-2">
+                            <p>Thể loại</p>
                         </div>
-
+                        <div class="col-10">
+                            <p>
+                                Cổ Trang, Thần Thoại, Hài Hước
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <p>Năm sản xuất</p>
+                        </div>
+                        <div class="col-10">
+                            <p th:text="${movie.releaseYear}">2021</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <p>Đạo diễn</p>
+                        </div>
+                        <div class="col-10">
+                            <p>
+                                Trần Gia Bội, Lý Tài
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <p>Diễn viên</p>
+                        </div>
+                        <div class="col-10">
+                            <p>
+                                Triệu Lộ Tư, Hạ Khai Lãng, Giai Nại Na, Dĩnh Nhi, Tào Phỉ Nhiên, Lý Quân Nhuệ,
+                                Vương An Vũ
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <p>Nội dung phim</p>
+                        </div>
+                        <div class="col-10">
+                            <p>
+                                <th:block th:text="${movie.description}"></th:block>
+                                <a class="text-primary" href="">Xem
+                                    thêm</a></p>
+                        </div>
                     </div>
                 </div>
-                <div class="col-9" style="display: flex; justify-content: space-between; ">
 
-                    <div style="margin-left: 30px;">
-                        <ul style="list-style: none; padding: 0; margin: 0; font-size: 20px;">
-
-                            <h1 th:text="${movie.title}">Vệ sĩ tuyệt đẹp </h1>
-                            <br>
-                            <li><b>Thời lượng: </b><span>100p</span></li>
-                            <li><b>Đạo diễn: </b>
-                                <span>Hiển</span></li>
-                            <li><b>Năm sản xuất: </b>
-                                <span th:text="${movie.releaseYear}">2020</span></li>
-                            <li><b>Quốc gia: </b>
-                                <span>Việt Nam</span></li>
-                            <li><b>Đánh giá: </b>
-                                <span th:text="${movie.rating}">8</span>/10
-                            </li>
-                            <li><b>Thể loại: </b>
-                                <span>Hành động, khoa học viễn tưởng</span></li>
-                            <br>
-
-
-                            <li>
-                                <b>Chọn tập phim: </b>
-                                <br>
-                                <button class=" bg-primary text-white ">Tập 1</button>
-                                <button>Tập 2</button>
-                            </li>
-
-                        </ul>
-
-                    </div>
-                    <div>
-                        <button class="bg-primary text-white fs-3">Download</button>
-                    </div>
-
-
-                </div>
+                <a class="d-inline-block btn btn-danger px-5 py-2 mt-3 rounded"
+                   href="/xem-phim/103/au-gau-ung-au-at?tap=full">
+                    <span><i class="fa-solid fa-play"></i></span>
+                    Xem phim</a>
 
             </div>
-
-
         </div>
+
+
     </div>
 </section>
 
-<section class="py-4 bg-dark-subtle shadow">
+<section class="py-4">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <button class="bg-dark-subtle text-dark">Thông tin</button>
-                <button class=" bg-primary text-white ">Diễn viên</button>
-            </div>
-            <div class="col-2 text-center fs-4"><p>Phim liên quan</p></div>
-
-        </div>
-        <div class="row d-flex justify-content-between">
-            <div class="col-8">
-                <br>
-                <p style="font-size: 20px;" th:text="${movie.description}">Vệ Sĩ Tuyệt Đẹp Tưởng Nam Anh, Hồ Lệ Phi và
-                    Mã yến Ni được ông trùm buôn ma
-                    túy quốc tế Bạch Tư Lý ủy thác cho việc hộ tống thiên tài y học Hoàng Gia Đống trở về nước. Tưởng
-                    Nam Anh và Hoàng Gia Đống sau khi trải qua sinh tử cùng nhau đã phát sinh tình yêu và cùng nhau bước
-                    vào lễ đường. Tuy nhiên, ngày cưới của họ lại trở thành cơn ác mộng khi Hoàng Gia Đông bị bắt cóc.
-                    Ban đầu, Hoàng Gia Đông bị tên trùm xã hội đen Lạp Ca truy bắt, sau đó lại bị đồng môn là Bạch Tư Lý
-                    lừa dối và kiểm soát để nghiên cứu ma túy. Vì lợi ích chung, hai trùm ma túy lớn là Lạp Ca và Bạch
-                    Tư Lý đã cấu kết với nhau. Tưởng Nam Anh bị kẻ thù bao vây, rơi vào tình thế tuyệt vọng. Cô không
-                    chỉ phải chiến đấu vì người yêu mà còn chiến đấu vì công lý! Cô sẽ quyết tâm đấu tranh chống ma túy
-                    và hy sinh thân minh để diệt trừ cái ác như thế nào?</p>
-
-
-            </div>
-            <div class="col-2 p-lg-1">
-
-                <div class="movie-item" th:each="movieRelated , iterStat : ${moviesRelated}"
-                     th:if="${iterStat.index < 2}">
-                    <div class="movie-poster rounded overflow-hidden">
-                        <img th:src="${movieRelated.poster}" alt=""
-                             class="w-100 " style="height: 100px">
-                    </div>
-                    <p class="mt-2" th:text="${movieRelated.title}">Chào Mừng Đến Samdalri</p>
-                    <p class="mt-2" th:text="${movieRelated.releaseYear}">2000</p>
-                    <br>
-                </div>
-
-                <!--                <div class="movie-item">-->
-                <!--                    <div class="movie-poster rounded overflow-hidden">-->
-                <!--                        <img src="https://image.motchillzzz.com/avatar/welcome-to-samdalri-x350.webp" alt=""-->
-                <!--                             class="w-100 h-100">-->
-                <!--                    </div>-->
-                <!--                    <p class="mt-2">Chào Mừng Đến Samdalri</p>-->
-                <!--                </div>-->
-            </div>
-        </div>
-
-        <br>
-
-        <section class="py-4">
-            <div class="container">
-                <div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h3 class="mb-3">Bình luận</h3>
-                        <button class="btn btn-success" id="openModalBtn">
-                            Viết đánh giá
-                        </button>
-
-                        <div id="reviewModal" class="modal">
-                            <div class="modal-content">
-                                <span class="close" onclick="closeModal()">&times;</span>
-
-                                <div class="rating">
-                                     <span class="star" data-rating="1">
-                                         <i class="fa-solid fa-star"></i>
-                                     </span>
-                                    <span class="star" data-rating="2">
-                                          <i class="fa-solid fa-star"></i>
-                                    </span>
-                                    <span class="star" data-rating="3">
-                                       <i class="fa-solid fa-star"></i>
-                                     </span>
-                                    <span class="star" data-rating="4">
-                                       <i class="fa-solid fa-star"></i>
-                                    </span>
-                                    <span class="star" data-rating="5">
-                                         <i class="fa-solid fa-star"></i>
-                                     </span>
-                                </div>
-                                <div id="rating-value"></div>
-
-
-                                <textarea id="reviewTextarea" placeholder="Viết đánh giá của bạn"></textarea>
-                                <button onclick="submitReview()">Gửi đánh giá</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="input-content">
-                        <input class="w-100 form-control border-bottom" type="text" placeholder="Viết bình luận ...">
-                    </div>
-                    <p>Vui lòng <a href="/dang-nhap" class="text-primary text-decoration-underline">đăng
-                        nhập</a> để viết bình luận</p>
-                    <div class="review-list">
-                        <div class="rating-item d-flex align-items-center mb-3 pb-3" th:each="review: ${reviews}">
-
-                            <div class="col-1 d-flex d-flex align-items-start" style="margin-bottom: auto">
-                                <img class="w-75 h-75" th:src="${review.user.avatar}" alt=" ">
-                            </div>
-
-
-                            <div class="rating-info ms-3">
-
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        <p class="rating-name mb-0 font-size-lg">
-                                        <strong th:text="${review.user.name}">Bùi Hiên</strong>
-                                    </p>
-                                        <p class="rating-time mb-0 ms-2"
-                                           th:text="${#dates.format(review.createdAt, 'dd/MM/yyyy')}">
-                                            09/01/2024</p>
-                                    </div>
-
-                                    <div>
-                                        <button class="btn btn-primary" id="fixModalBtn">
-                                            Chỉnh sửa
-                                        </button>
-
-                                        <button class="btn btn-danger" id="deleteModalBtn">
-                                            Xóa
-                                        </button>
-<!--                                        div class="reviewId" th:data-review-id="${review.id}"></div><-->
-                                    </div>
-                                </div>
-
-                                <div class="rating-star">
-                                    <p class="mb-0 fw-bold">
-                                        <span class="rating-icon" th:each="star: ${#numbers.sequence(0, (review.rating div 2) - 1)}">
-                                            <i class="fa fa-star" style="color: gold"></i>
-                                        </span>
-                                        <span th:text="${review.rating} + '/10'">9/10 Tuyệt vời</span>
-                                    </p>
-                                </div>
-
-                                <p class="rating-content mt-1 mb-0 text-muted" th:text="${review.comment}">Phim xem ổn.
-                                    Điểm
-                                    nhấn chính là sự hài hước và
-                                    tiết
-                                    tấu. Kết phim chưa thực sự hài lòng. 1 số nhân vật hoành tráng
-                                    ở đầu và giữa phim, thì cuối phim mờ nhạt. Diễn biến phim hoặc
-                                    chưa dành đủ thời gian, hoặc chưa nhấn mạnh đủ để dẫn đến các
-                                    kết quả ở cuối phim.</p>
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <div class="row">
+        <div>
             <div class="d-flex justify-content-between align-items-center">
-                <h3 class="mb-3">Phim đề cử</h3>
-                <a href="#">Xem thêm</a>
+                <h3 class="mb-3">Bình luận</h3>
+                <button class="btn btn-primary" id="btn-open-modal-review">
+                    Viết đánh giá
+                </button>
             </div>
-            <div class="col-2" th:each="movieRelated , iterStat : ${moviesRelated}"
-                 th:if="${ iterStat.index < 8 && iterStat.index >= 2 }">
-                <div class="movie-item">
-                    <div class="movie-poster rounded overflow-hidden">
-                        <img th:src="${movieRelated.poster}" alt=""
-                             class="w-100 " style="height: 100px">
+            <p>Vui lòng <a href="/dang-nhap" class="text-primary text-decoration-underline">đăng
+                nhập</a> để viết bình luận</p>
+            <div class="review-list">
+            </div>
+            <div id="review-pagination" class="d-flex justify-content-center"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="modalReview" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog " >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-review-title">Viết đánh giá</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 class="text-center mb-2" th:text="${movie.title}"></h6>
+                <div class="mb-4">
+                    <div class="rating-container d-flex justify-content-center">
+                        <span class="star" data-rating="1">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="2">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="3">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="4">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="5">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="6">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="7">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="8">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="9">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="10">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
                     </div>
-                    <p class="mt-2" th:text="${movieRelated.title}">Chào Mừng Đến Samdalri</p>
-                    <p class="mt-2" th:text="${movieRelated.releaseYear}">2000</p>
+                    <div class="text-center" id="rating-value"></div>
                 </div>
-            </div>
 
+                <form id="form-review">
+                    <div class="mb-3">
+                        <div class="form-group">
+                            <textarea class="form-control" id="review-content" rows="4"
+                                      placeholder="Chia sẻ cảm nghĩ của bạn về bộ phim ..." name="content"></textarea>
+                        </div>
+                    </div>
+                    <div class="mb-3 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary" id="btn-handle">Hoàn tất</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</section>
+</div>
 
-
-<section class="py-4 bg-dark-subtle">
+<section class="py-4 bg-body-tertiary">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <h3 class="mb-3">Tin tức</h3>
-            <a th:href="@{/danh-sach-blog}">Xem thêm</a>
-        </div>
-
-
-        <div class="row" th:each="blog: ${blogs}">
-            <div class="col-1">
-                <div class="text-center">
-                    <p class="fs-1 fw-bold text-primary mb-1" th:text="${blog.publishedAt.getDay()}">5</p>
-                    <p th:text="${blog.publishedAt.getYear()+1900} +'-'+
-                            ${blog.publishedAt.getMonth()} + '-' + ${blog.publishedAt.getDay()}">March</p>
+        <h3 class="mb-3">Phim đề xuất</h3>
+        <div class="row">
+            <div class="col-2" th:each="movieRelated , iterStat : ${moviesRelated}"
+                 th:if="${ iterStat.index < 6 }">
+                <div class="movie-item">
+                    <a th:href="@{/phim/{id}/{slug} (id=${movie.id}, slug=${movieRelated.slug})}"
+                       class="movie-media">
+                        <div class="movie-poster rounded overflow-hidden">
+                            <img class="w-100 h-100"
+                                 th:src="${movieRelated.poster}" th:alt="${movieRelated.title}">
+                        </div>
+                        <p class="mt-2" th:text="${movieRelated.title}">Cô Đi Mà Lấy Chồng Tôi</p>
+                    </a>
                 </div>
             </div>
-            <div class="col-11">
-                <h3 th:text="${blog.title}">Top 12 phim ngôn tình Trung Quốc hay không nên bỏ qua</h3>
-                <p th:text="${blog.description}">List những bộ phim ngôn tình Trung Quốc lãng mạn sẽ khiến tâm hồn bạn
-                    trở nên ngọt ngào. Tham
-                    khảo ngay top phim tình cảm Trung Quốc đã được phimmoi liệt kê bên dưới nhé! Thầm ...</p>
-            </div>
         </div>
-
-
     </div>
-
 </section>
-
-
 <footer class="bg-dark-subtle" style="border-top: 1px solid #454545;">
     <div class="container">
         <div class="row">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
                     <img src="/image/teemo1.webp" alt="" style="height: 100px; width: 100px;">
-                    <img src="https://motchillzzz.com/_ipx/f_webp&s_200x52/logo.png" alt="">
+                    <img src="/image/logo.png" alt="">
 
 
                 </div>
@@ -364,10 +280,32 @@
     </div>
 </footer>
 
-<script th:src="@{/js/main.js}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
+        integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"
+        integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.js"
+        integrity="sha512-GzbaI5EsNzdEUq6/2XLYpr1y9CUZRIVsUeWTAFgULtQa5jZ3Nug8i0nZKM6jp9NffBCZhymPPQFcF0DK+JkRpw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/js/main.js"></script>
+<script th:inline="javascript">
+    const movie = [[${movie}]];
+    let reviewList = [[${reviews}]];
 
+    console.log({movie, reviewList})
+</script>
+<script src="/js/movie-detail.js"></script>
+</body>
 </html>

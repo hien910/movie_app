@@ -100,10 +100,15 @@ const renderReivew = (reviews) => {
                         </p>
                     </div>
                     <p class="rating-content mt-1 mb-0 text-muted">${review.comment}</p>
-                    <div>
+                    
+                    ${currentUser && currentUser.id === review.user.id ? 
+                    `<div>
                         <button class="btn bg-transparent text-primary p-0 me-1 text-decoration-underline" onclick="openModalUpdateReview(${review.id})">Sửa</button>
                         <button class="btn bg-transparent text-danger p-0 text-decoration-underline" onclick="deleteReview(${review.id})">Xóa</button>
                     </div>
+                    `:``}
+                    
+                    
                 </div>
             </div>
         `

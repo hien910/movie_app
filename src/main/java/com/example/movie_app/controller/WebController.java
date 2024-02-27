@@ -13,7 +13,6 @@ import com.example.movie_app.service.ReviewService;
 import com.example.movie_app.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,10 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.Normalizer;
 import java.util.List;
-import java.util.Locale;
-import java.util.regex.Pattern;
 
 @Controller
 @RequiredArgsConstructor
@@ -103,6 +99,8 @@ public class WebController {
         Movie movie = movieService.findMovieById(id);
         List<Review> reviewList = reviewService.getReviewsByMovie(id);
 
+//        model.addAttribute("currentUser", httpSession.getAttribute("currentUser"));
+
 //        // Kiểm tra nếu không tìm thấy phim
 //        if (movie == null) {
 //            // Xử lý trường hợp không tìm thấy, có thể redirect hoặc hiển thị trang lỗi
@@ -156,7 +154,7 @@ public class WebController {
         if (user != null) {
             return "redirect:/";
         }
-        return "web/dang-ky";
+        return "web/auth/dang-ky";
     }
 
     @GetMapping("/dang-nhap")
@@ -165,7 +163,7 @@ public class WebController {
         if (user != null) {
             return "redirect:/";
         }
-        return "web/dang-nhap";
+        return "web/auth/dang-nhap";
     }
 
 

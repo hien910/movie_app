@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header th:fragment="header">
+    <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <!-- <img src="./image/teemo1.webp" alt=""> -->
+                <img src="/image/teemo1.webp" alt="" style="height: 100px; width: 100px;">
+                <img src="/image/logo.png" alt="" style="height: 50px; width: 168px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link text-white fs-5" th:href="@{/}">Trang chủ</a>
+                    <a class="nav-link text-white fs-5" th:href="@{/phim-bo}">Phim bộ</a>
+                    <a class="nav-link text-white fs-5" th:href="@{/phim-chieu-rap}">Phim chiếu rạp</a>
+                    <a class="nav-link text-white fs-5" th:href="@{/phim-le}">Phim lẻ</a>
+                </div>
+
+                <div id="advc-menu" class="search">
+                    <form method="get" id="searchform" action="https://phimmoiyyy.net">
+                        <input type="text" placeholder="Tìm kiếm..." style="width: 250px; height: 50px;">
+                        <button class="search-button" type="submit" style="width: 50px; height: 50px;">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div>
+<!--                    <a class="nav-link text-white" href="/dang-nhap" style="font-size: 20px;">Đăng nhập</a>-->
+                    <th:block th:if="${session.currentUser == null}">
+                        <a class="text-white" href="/dang-nhap">Đăng nhập</a>
+                    </th:block>
+                    <th:block th:if="${session.currentUser != null}">
+                        <p class="text-white mb-0" th:text="${session.currentUser.name}"></p>
+                    </th:block>
+
+                </div>
+                <div><i class="bi bi-person-circle" style="color: azure ;font-size: 30px;"></i></div>
+            </div>
+        </div>
+    </nav>
+</header>
+</body>
+</html>

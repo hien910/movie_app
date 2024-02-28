@@ -29,9 +29,10 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new BadRequestException("Tài khoản hoặc mật khẩu không đúng"));
 
         // Kiểm tra password
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), passwordEncoder.encode(user.getPassword()))) {
             throw new BadRequestException("Tài khoản hoặc mật khẩu không đúng");
         }
+
 
         // Lưu thông tin user vào trong session
         session.setAttribute("currentUser", user);

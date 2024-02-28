@@ -38,17 +38,49 @@
                 <div>
 <!--                    <a class="nav-link text-white" href="/dang-nhap" style="font-size: 20px;">Đăng nhập</a>-->
                     <th:block th:if="${session.currentUser == null}">
-                        <a class="text-white" href="/dang-nhap">Đăng nhập</a>
+                        <a class="text-white" href="/dang-nhap">Log in</a>
                     </th:block>
                     <th:block th:if="${session.currentUser != null}">
-                        <p class="text-white mb-0" th:text="${session.currentUser.name}"></p>
+                        <p class="text-white mb-0 " th:text="${session.currentUser.name}"></p>
                     </th:block>
 
                 </div>
-                <div><i class="bi bi-person-circle" style="color: azure ;font-size: 30px;"></i></div>
+                <div><i class="bi bi-person-circle" style="color: azure ;font-size: 30px;"></i>
+
+                </div>
+                <div th:if="${session.currentUser != null}" >
+                    <form id="logoutForm" method="post" action="/">
+                        <button type="submit"> Log out </button>
+                    </form>
+<!--                    <a class="text-white" href="/"></a>-->
+                </div>
             </div>
         </div>
     </nav>
+    <script>
+        const formLogout = document.getElementById('logoutForm');
+
+        formLogout.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            // Send logout request to server using axios
+            axios.post('/api/auth/logout')
+                .then((response) => {
+                    console.log(response);  // In ra phản hồi từ máy chủ
+                    if (response.status === 200) {
+                        toastr.success("Đăng xuất thành công");
+                        setTimeout(() => {
+                            window.location.href = '/';  // Chuyển hướng về trang đăng nhập hoặc trang chính
+                        }, 1500);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    console.log(error.response.data.message);
+                });
+        });
+    </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </header>
 </body>
 </html>

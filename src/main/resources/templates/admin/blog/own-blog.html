@@ -1,86 +1,98 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org"
-	  th:replace="~{admin/layout/layout-blog :: layout(~{:: title}, ~{}, ~{:: .content-wrapper}, ~{:: #js})}">
-
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/blog/layout/layout-blog.html :: layout-blog(~{::title},~{:: #css},~{:: .content-wrapper},~{:: #js})}">
 <head>
-	<title>Bài viết của tôi</title>
+    <title>Bài viết của tôi</title>
 </head>
+<th:block id="css">
+    <link rel="stylesheet" href="/admin-assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="/admin-assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="/admin-assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css"/>
+</th:block>
 
 <body>
 <div class="content-wrapper">
-	<!-- Content Header (Page header) -->
-	<div class="content-header">
-		<div class="container-fluid">
-			<div class="row mb-2">
-				<div class="col-sm-12">
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item">
-							<a href="#">Dashboard</a>
-						</li>
-						<li class="breadcrumb-item active">
-							Bài viết của tôi
-						</li>
-					</ol>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="#">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            Bài viết của tôi
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<!-- Main content -->
-	<section class="content">
-		<div class="container-fluid">
-			<div class="row py-2">
-				<div class="col-12">
-					<a href="/admin/blogs/create" type="button" class="btn btn-primary">
-						<i class="fas fa-plus"></i> Viết bài
-					</a>
-					<a href="/admin/blogs/own-blog" type="button" class="btn btn-info">
-						<i class="fas fa-redo"></i> Refresh
-					</a>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-12">
-					<div class="card">
-						<div class="card-body">
-							<table id="table-blog" class="table table-bordered table-hover">
-								<thead>
-								<tr>
-									<th>Tiêu đề</th>
-									<th>Trạng thái</th>
-									<th>Ngày tạo</th>
-								</tr>
-								</thead>
-								<tbody>
-								<tr th:each="blog : ${blogList}">
-									<td>
-										<a th:href="@{/admin/blogs/{id}/detail (id=${blog.id})}" th:text="${blog.title}">Top 11 phim có doanh thu cao nhất mọi thời đại</a>
-									</td>
-									<td th:text="${blog.status ? 'Công khai' : 'Nháp'}">Công khai</td>
-									<td th:text="${#dates.format(blog.createdAt, 'dd/MM/yyyy')}">09/01/2024</td>
-								</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row py-2">
+                <div class="col-12">
+                    <a href="/admin/blogs/create" type="button" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Viết bài
+                    </a>
+                    <a href="/admin/blogs/own-blog" type="button" class="btn btn-info">
+                        <i class="fas fa-redo"></i> Refresh
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="table-blog" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Tiêu đề</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ngày tạo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="blog : ${blogList}">
+                                    <td>
+                                        <a th:href="@{/admin/blogs/{id}/detail (id=${blog.id})}"
+                                           th:text="${blog.title}"></a>
+                                    </td>
+                                    <td th:text="${blog.status ? 'Công khai' : 'Nháp'}"></td>
+                                    <td th:text="${#dates.format(blog.createdAt, 'dd/MM/yyyy')}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
 <th:block id="js">
-	<script th:inline="javascript">
-		$('#table-blog').DataTable({
-			"paging": true,
-			"lengthChange": true,
-			"searching": true,
-			"ordering": true,
-			"info": true,
-			"autoWidth": false,
-			"responsive": true,
-		});
-	</script>
+    <script src="/admin-assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script >
+        $('#table-blog').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    </script>
 </th:block>
 </body>
 

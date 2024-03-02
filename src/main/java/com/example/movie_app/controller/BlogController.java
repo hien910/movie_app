@@ -22,7 +22,8 @@ public class BlogController {
     }
     @GetMapping("/own-blog")
     public String viewOwnBlogPage(Model model){
-        model.addAttribute("blog",blogService.findByUserId());
+
+        model.addAttribute("blogList",blogService.findByCurrentUser());
         return "admin/blog/own-blog";
     }
     @GetMapping("/create")

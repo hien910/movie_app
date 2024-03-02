@@ -74,7 +74,7 @@
 
                                         <div class="form-group">
                                             <label>Nội dung</label>
-                                            <textarea id="content"></textarea>
+                                            <textarea class="form-control" rows="3" id="content"></textarea>
                                         </div>
 
                                         <div class="form-group">
@@ -147,7 +147,10 @@
 
     <script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+            integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         // Initialize Select2 Elements
         $(".select2").select2();
@@ -162,9 +165,7 @@
             },
         });
 
-
         $('#form-create-blog').validate({
-
             rules: {
                 title: {
                     required: true
@@ -188,10 +189,8 @@
                 },
                 description: {
                     required: "Mô tả ngắn không được để trống"
-                },
-                status: {
-                    required: "Trạng thái không được để trống"
                 }
+
             },
             errorElement: 'span',
             errorPlacement: function (error, element) {
@@ -208,7 +207,7 @@
 
         // Lưu bài viết
         const titleEl = document.getElementById('title');
-        const contentEl = document.getElementById('content');
+        let contentEl = document.getElementById('content');
         const descriptionEl = document.getElementById('description');
         const statusEl = document.getElementById('status');
 
@@ -243,13 +242,10 @@
         })
 
     </script>
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"-->
-<!--            integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="-->
-<!--            crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
-            integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+            integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
 
 </th:block>
 </body>

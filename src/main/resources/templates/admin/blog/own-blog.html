@@ -1,125 +1,87 @@
-<!doctype html>
-<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:th="http://www.thymeleaf.org"
-	  th:replace="~{admin/blog/layout/layout-blog.html :: layout-blog(~{::title},~{},~{::#main-content},~{})}">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+	  th:replace="~{admin/layout/layout-blog :: layout(~{:: title}, ~{}, ~{:: .content-wrapper}, ~{:: #js})}">
+
 <head>
-	<title>AdminLTE 3 | Dashboard</title>
+	<title>Bài viết của tôi</title>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
-
-	<!-- Content Wrapper. Contains page content -->
-	<div class="content-wrapper" id="main-content">
-		<!-- Content Header (Page header) -->
-		<div class="content-header">
-			<div class="container-fluid">
-				<div class="row mb-2">
-					<div class="col-sm-12">
-						<ol class="breadcrumb">
-							<li class="breadcrumb-item">
-								<a href="#">Dashboard</a>
-							</li>
-							<li class="breadcrumb-item active">
-								Bài viết của tôi
-							</li>
-						</ol>
-					</div>
+<body>
+<div class="content-wrapper">
+	<!-- Content Header (Page header) -->
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-12">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="#">Dashboard</a>
+						</li>
+						<li class="breadcrumb-item active">
+							Bài viết của tôi
+						</li>
+					</ol>
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<!-- Main content -->
-		<section class="content">
-			<div class="container-fluid">
-				<div class="row py-2">
-					<div class="col-12">
-						<button type="button" class="btn btn-primary">
-							<i class="fas fa-plus"></i> Viết bài
-						</button>
-						<button type="button" class="btn btn-info">
-							<i class="fas fa-redo"></i> Refresh
-						</button>
-					</div>
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row py-2">
+				<div class="col-12">
+					<a href="/admin/blogs/create" type="button" class="btn btn-primary">
+						<i class="fas fa-plus"></i> Viết bài
+					</a>
+					<a href="/admin/blogs/own-blog" type="button" class="btn btn-info">
+						<i class="fas fa-redo"></i> Refresh
+					</a>
 				</div>
-				<div class="row">
-					<div class="col-12">
-						<div class="card">
-							<div class="card-body">
-								<table class="table table-bordered table-hover">
-									<thead>
-									<tr>
-										<th>Tiêu đề</th>
-										<th>Danh mục</th>
-										<th>Trạng thái</th>
-										<th>Ngày tạo</th>
-									</tr>
-									</thead>
-									<tbody>
-									<tr>
-										<td>
-											<a href="detail.html">Khai giảng khóa
-												Java Spring Boot 12A
-												- song song 2 hình
-												thức offline /
-												online đáp ứng nhu
-												cầu đào tạo từ xa</a>
-										</td>
-										<td>
-											Java, Golang, Springboot
-										</td>
-										<td>Công khai</td>
-										<td>06-07-2022</td>
-									</tr>
-									</tbody>
-								</table>
-
-								<div class="d-flex justify-content-center mt-3" id="pagination">
-									<ul class="pagination mb-0">
-										<li class="paginate_button page-item previous disabled"
-											id="example2_previous">
-											<a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0"
-											   class="page-link">Previous</a>
-										</li>
-										<li class="paginate_button page-item active">
-											<a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0"
-											   class="page-link">1</a>
-										</li>
-										<li class="paginate_button page-item">
-											<a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0"
-											   class="page-link">2</a>
-										</li>
-										<li class="paginate_button page-item">
-											<a href="#" aria-controls="example2" data-dt-idx="3" tabindex="0"
-											   class="page-link">3</a>
-										</li>
-										<li class="paginate_button page-item">
-											<a href="#" aria-controls="example2" data-dt-idx="4" tabindex="0"
-											   class="page-link">4</a>
-										</li>
-										<li class="paginate_button page-item">
-											<a href="#" aria-controls="example2" data-dt-idx="5" tabindex="0"
-											   class="page-link">5</a>
-										</li>
-										<li class="paginate_button page-item">
-											<a href="#" aria-controls="example2" data-dt-idx="6" tabindex="0"
-											   class="page-link">6</a>
-										</li>
-										<li class="paginate_button page-item next" id="example2_next">
-											<a href="#" aria-controls="example2" data-dt-idx="7" tabindex="0"
-											   class="page-link">Next</a>
-										</li>
-									</ul>
-								</div>
-							</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-body">
+							<table id="table-blog" class="table table-bordered table-hover">
+								<thead>
+								<tr>
+									<th>Tiêu đề</th>
+									<th>Trạng thái</th>
+									<th>Ngày tạo</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr th:each="blog : ${blogList}">
+									<td>
+										<a th:href="@{/admin/blogs/{id}/detail (id=${blog.id})}" th:text="${blog.title}">Top 11 phim có doanh thu cao nhất mọi thời đại</a>
+									</td>
+									<td th:text="${blog.status ? 'Công khai' : 'Nháp'}">Công khai</td>
+									<td th:text="${#dates.format(blog.createdAt, 'dd/MM/yyyy')}">09/01/2024</td>
+								</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
 			</div>
-		</section>
-	</div>
+		</div>
+	</section>
 </div>
 
+<th:block id="js">
+	<script th:inline="javascript">
+		$('#table-blog').DataTable({
+			"paging": true,
+			"lengthChange": true,
+			"searching": true,
+			"ordering": true,
+			"info": true,
+			"autoWidth": false,
+			"responsive": true,
+		});
+	</script>
+</th:block>
 </body>
 
 </html>

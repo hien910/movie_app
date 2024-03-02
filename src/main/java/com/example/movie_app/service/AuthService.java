@@ -29,7 +29,7 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new BadRequestException("Tài khoản hoặc mật khẩu không đúng"));
 
         // Kiểm tra password
-        if (!passwordEncoder.matches(request.getPassword(), passwordEncoder.encode(user.getPassword()))) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())){
             throw new BadRequestException("Tài khoản hoặc mật khẩu không đúng");
         }
 
@@ -43,6 +43,8 @@ public class AuthService {
 
         // Tìm user theo email
         User existedUser = userRepository.findByEmail(request.getEmail()).orElse(null);
+
+
 
         if (existedUser != null) {
             throw new BadRequestException("Tài khoản này đã đăng ký");

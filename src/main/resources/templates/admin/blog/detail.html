@@ -1,15 +1,17 @@
 <!doctype html>
-<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       th:replace="~{admin/blog/layout/layout-blog.html :: layout-blog(~{::title},~{::#css},~{::#main-content},~{::#js})}">
 <head>
 
     <title>AdminLTE 3 | Dashboard</title>
     <th:block id="css">
-        <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css" />
-
-        <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css" />
+        <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css"/>
+        <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+              integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+              crossorigin="anonymous" referrerpolicy="no-referrer"/>
         <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
     </th:block>
 </head>
@@ -30,9 +32,9 @@
                                 <a href="#">Dashboard</a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="#">Blog</a>
+                                <a href="/admin/blogs/own-blog">Blog</a>
                             </li>
-                            <li class="breadcrumb-item active">
+                            <li class="breadcrumb-item active" th:text="${blog.title}">
                                 Thực hành làm ứng dụng Meal Finder API
                                 với Javascript (Phần 2)
                             </li>
@@ -50,7 +52,7 @@
                         <button type="button" class="btn btn-default">
                             <i class="fas fa-chevron-left"></i> Quay lại
                         </button>
-                        <button type="button" class="btn btn-info px-4">
+                        <button type="button" class="btn btn-info px-4" id="btn-update">
                             Lưu
                         </button>
                         <button type="button" class="btn btn-primary px-4">
@@ -59,7 +61,7 @@
                     </div>
 
                     <div class="col-6 d-flex justify-content-end">
-                        <button type="button" class="btn btn-danger px-4">
+                        <button type="button" class="btn btn-danger px-4" id="btn-delete">
                             Xóa
                         </button>
                     </div>
@@ -69,77 +71,82 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <label>Tiêu đề</label>
-                                            <input type="text" class="form-control" id="title" />
+                                <form id="form-update-blog">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Tiêu đề</label>
+                                                <input type="text" class="form-control" id="title"
+                                                       th:value="${blog.title}"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Nội dung</label>
+                                                <textarea id="content" th:text="${blog.content}"></textarea>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Mô tả ngắn</label>
+                                                <textarea id="description" class="form-control" rows="3"
+                                                          th:text="${blog.description}"></textarea>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group">
-                                            <label>Nội dung</label>
-                                            <textarea id="content"></textarea>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label>Mô tả ngắn</label>
-                                            <textarea id="description" class="form-control" rows="3"></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Trạng thái</label>
-                                            <select id="status" class="form-control">
-                                                <option value="0">
-                                                    Nháp
-                                                </option>
-                                                <option value="1">
-                                                    Công khai
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Danh mục</label>
-                                            <div class="select2-purple">
-                                                <select class="select2 form-control" multiple="multiple"
-                                                        id="category">
-                                                    <option>
-                                                        Java
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Trạng thái</label>
+                                                <select id="status" class="form-control">
+                                                    <option value="0" th:selected="${blog.status == false}">
+                                                        Nháp
                                                     </option>
-                                                    <option>
-                                                        Golang
-                                                    </option>
-                                                    <option>
-                                                        React
-                                                    </option>
-                                                    <option>
-                                                        Lập trình web
-                                                    </option>
-                                                    <option>
-                                                        Database
-                                                    </option>
-                                                    <option>
-                                                        Tips Trick
-                                                    </option>
-                                                    <option>
-                                                        Devops
+                                                    <option value="1" th:selected="${blog.status == true}">
+                                                        Công khai
                                                     </option>
                                                 </select>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="thumbnail-preview-container mb-3">
-                                                <img src="" alt="" id="thumbnail" />
+                                            <div class="form-group">
+                                                <label>Danh mục</label>
+                                                <div class="select2-purple">
+                                                    <select class="select2 form-control" multiple="multiple"
+                                                            id="category">
+                                                        <option>
+                                                            Java
+                                                        </option>
+                                                        <option>
+                                                            Golang
+                                                        </option>
+                                                        <option>
+                                                            React
+                                                        </option>
+                                                        <option>
+                                                            Lập trình web
+                                                        </option>
+                                                        <option>
+                                                            Database
+                                                        </option>
+                                                        <option>
+                                                            Tips Trick
+                                                        </option>
+                                                        <option>
+                                                            Devops
+                                                        </option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <button type="button" class="btn btn-info btn-flat" data-toggle="modal"
-                                                    data-target="#modal-xl">
-                                                Chọn hình ảnh
-                                            </button>
+                                            <div class="form-group">
+                                                <div class="thumbnail-preview-container mb-3">
+                                                    <img th:src="${blog.thumbnail}" alt="" id="thumbnail"/>
+                                                </div>
+                                                <button type="button" class="btn btn-info btn-flat" data-toggle="modal"
+                                                        data-target="#modal-xl">
+                                                    Chọn hình ảnh
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -189,7 +196,10 @@
     <script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
 
     <script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+            integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         //Initialize Select2 Elements
         $(".select2").select2();
@@ -214,20 +224,101 @@
             $("#thumbnail").attr("src", data.thumbnail);
         };
 
-        const blog = {
-            id: 36870,
-            title: "Làm ứng dụng Music Player bằng Javascript",
-            content:
-                'Chào các bạn, trong bài viết này chúng ta sẽ cùng nhau làm ứng dụng nghe nhạc " `Music Player`" bằng javascript. Chắc trong số chúng ta ai cũng thích nghe nhạc phải không nào, thay vì hằng ngày chúng ta nghe nhạc qua youtube, qua zing mp3, vậy tại sao chúng ta không tự tạo ra một ứng dụng nghe nhạc cơ bản bằng chính khả năng của chúng ta. Có phải sẽ thú vị hơn không 😁😁\n\nVới ứng dụng Music Player chúng ta có thể làm các chức năng đơn giản sau:\n\n- Play bài hát\n- Pause bài hát\n- Chuyển bài qua lại\n- Tua bài hát\n- ...\n\nĐây là giao diện ứng dụng Music Player ban đầu chúng ta, mình để link source ở đây để các bạn có thể tham khảo : [https://github.com/buihien0109/music-player/tree/main/start](https://github.com/buihien0109/music-player/tree/main/start)\n\nNgoài ra các bạn có thể tạo giao diện ứng dụng theo ý thích và phong cách của mình\n\n![demo music player app](https://media.techmaster.vn/api/static/9479/c6iesrs51cof74mrqnfg)\n\nBắt đầu thôi nào 😁😁😁\n\n### Hiển thị thông tin bài hát\n\nMặc định ban đầu chúng ta sẽ hiển thị ra 1 bài hát bất kỳ với tiêu đề, audio và ảnh tương ứng với bài hát đó\n\n```javascript\nconst audio = document.getElementById("audio");\nconst title = document.getElementById("title");\nconst cover = document.getElementById("cover");\n\n// Tiêu đề bài hát, tương ứng với các file mp3\nconst songs = ["mot_phut", "hen_yeu", "roi_xa"];\n\n// Lấy index bất kỳ trong mảng songs để hiện thị\nlet songIndex = 2;\n\n// Load 1 bài hát theo index\nloadSong(songs[songIndex]);\n\n// Cập nhật thông tin bài hát\nfunction loadSong(song) {\n    title.innerText = song;\n    audio.src = `music/${song}.mp3`;\n    cover.src = `images/${song}.jpg`;\n}\n```\n\nHiện tại trong project, chúng ta mockup sẵn 3 audio tương ứng là các giá trị trong mảng **songs**\n\nFunction **loadSong** giúp chúng ta hiển thị thông tin bài hát\n\n### Play & Pause\n\nMặc định ban đầu thì bài hát ở trạng thái " `pause`", chúng ta sẽ thực hiện click để play audio\n\nTuy nhiên chúng ta cần phải biết khi nào thì play, khi nào thì pause. Để làm điều này, chúng ta sẽ phụ thuộc vào class " `play`" trong element " `musicContainer`"\n\nĐịnh nghĩa 2 function :\n\n- `playSong` để phát nhạc\n- `pauseSong` để tam dừng\n\n```javascript\nconst musicContainer = document.getElementById("music-container");\nconst playBtn = document.getElementById("play");\n\n// Play song\nfunction playSong() {\n    musicContainer.classList.add("play");\n    playBtn.querySelector("i.fas").classList.remove("fa-play");\n    playBtn.querySelector("i.fas").classList.add("fa-pause");\n\n    audio.play();\n}\n\n// Pause song\nfunction pauseSong() {\n    musicContainer.classList.remove("play");\n    playBtn.querySelector("i.fas").classList.add("fa-play");\n    playBtn.querySelector("i.fas").classList.remove("fa-pause");\n\n    audio.pause();\n}\n\n// Lắng nghe sự kiện\nplayBtn.addEventListener("click", () => {\n    // Kiểm tra xem musicContainer có chứa class "play" hay không?\n    const isPlaying = musicContainer.classList.contains("play");\n\n    // Nếu có thì thực hiện pause\n    // Nếu không thì thực hiện play\n    if (isPlaying) {\n        pauseSong();\n    } else {\n        playSong();\n    }\n});\n```\n\n### Progress song\n\nTheo mặc định là khi chúng ta bắt đầu 1 bài hát mới thì thanh tiến trình (progress bar) bắt đầu chạy, dựa vào progress chúng ta có thể biết được tiến độ phát bài hát. Để làm được điều này, chúng ta lắng nghe sự kiện " `timeupdate`" của `audio` element, và gọi hàm xử lý tương ứng là `updateProgress`.\n\nSự kiện " `timeUpdate`" được kích hoạt khi vị trí phát của audio/video bị thay đổi.\n\nNgoài ra, chúng ta có thể "tua" nhanh bài hát đến 1 vị trí được chỉ định trên thanh progress. Ở đây chúng ta sẽ lắng nghe sự kiện "click" trên `progressContainer` element để update `currentTime` của audio\n\n```javascript\nconst progress = document.getElementById("progress");\nconst progressContainer = document.getElementById("progress-container");\n\n// Time/song update\naudio.addEventListener("timeupdate", updateProgress);\n\n// Click on progress bar\nprogressContainer.addEventListener("click", setProgress);\n\n// Update progress bar\nfunction updateProgress(e) {\n    const { duration, currentTime } = e.srcElement;\n    const progressPercent = (currentTime / duration) * 100;\n    progress.style.width = `${progressPercent}%`;\n}\n\n// Set progress bar\nfunction setProgress(e) {\n    const width = this.clientWidth;\n    const clickX = e.offsetX;\n    const duration = audio.duration;\n\n    audio.currentTime = (clickX / width) * duration;\n}\n```\n\n### Next song & Prev song\n\nMột tính năng rất quan trọng trong một ứng dụng "`Music Player`" là next và prev bài hát. Để làm được điều này chúng ta lắng nghe sự kiện "click" trên 2 nút `nextBtn` gọi hàm xử lý `nextSong` để thực hiện next bài hát và nút `prevBtn` gọi hàm xử lý `prevSong` để thực hiện prev bài hát\n\n```javascript\nconst prevBtn = document.getElementById("prev");\nconst nextBtn = document.getElementById("next");\n\n// Lắng nghe sự kiện khi next và prev bài hát\nprevBtn.addEventListener("click", prevSong);\nnextBtn.addEventListener("click", nextSong);\n\n// Lắng nghe sự kiện khi kết thúc bài hát\naudio.addEventListener("ended", nextSong);\n\n// Xử lý khi prev bài hát\nfunction prevSong() {\n    // Giảm index của songIndex đi 1\n    songIndex--;\n\n    // Nếu đang là bài hát đầu thì quay lại bài hát cuối\n    if (songIndex < 0) {\n        songIndex = songs.length - 1;\n    }\n\n    // Cập nhật thông tin của bài hát lên giao diện\n    loadSong(songs[songIndex]);\n\n    // Phát nhạc\n    playSong();\n}\n\n// Xử lý khi next bài hát\nfunction nextSong() {\n    // Tăng index của songIndex lên 1\n    songIndex++;\n\n    // Nếu đang là bài hát cuối thì quay lại bài hát đầu\n    if (songIndex > songs.length - 1) {\n        songIndex = 0;\n    }\n\n    // Cập nhật thông tin của bài hát lên giao diện\n    loadSong(songs[songIndex]);\n\n    // Phát nhạc\n    playSong();\n}\n```\n\nVà đây là kết quả cuối cùng của chúng ta\n\n![kết quả](https://media.techmaster.vn/api/static/9479/c6ioqls51cof74mrqnh0)\n\nVậy là chúng ta đã hoàn thành ứng dụng "Music Player" với các chức năng cơ bản. Hi vọng các bạn thấy bài viết này hữu ích và thú vị 😁😁😁\n\nPhần sources code của bài viết này, các bạn có thể tham khảo tại đây: [https://github.com/buihien0109/music-player/tree/main/final](https://github.com/buihien0109/music-player/tree/main/final)\n\n> Các bạn có thể tham khảo thêm khóa học này nhé:\n\n- Javascript căn bản - Tổng hợp 12 game huyền thoại - [tại đây](https://techmaster.vn/khoa-hoc/ev5/javascript-can-ban-tong-hop-12-game-huyen-thoai).\n- Lập trình Game Javascript (trực tuyến có tương tác) - [tại đây](https://codegame.techmaster.vn/).',
-            description:
-                "Chào các bạn, trong bài viết này chúng ta sẽ cùng nhau làm ứng dụng nghe nhạc &#34;Music Player&#34; bằng javascript\n",
-            thumbnail:
-                "https://media.techmaster.vn/api/static/9479/c6iesrs51cof74mrqnfg",
-            status: 1,
-            categories: ["Golang", "Java", "Lập trình web"],
-        };
+        $('#form-update-blog').validate({
+            rules: {
+                title: {
+                    required: true
+                },
+                content: {
+                    required: true
+                },
+                description: {
+                    required: true
+                },
+                status: {
+                    required: true
+                }
+            },
+            messages: {
+                title: {
+                    required: "Tiêu đề không được để trống"
+                },
+                content: {
+                    required: "Nội dung không được để trống"
+                },
+                description: {
+                    required: "Mô tả ngắn không được để trống"
+                },
+                status: {
+                    required: "Trạng thái không được để trống"
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
 
-        initData(blog);
+        // Lưu bài viết
+        const titleEl = document.getElementById('title');
+        const contentEl = document.getElementById('content');
+        const descriptionEl = document.getElementById('description');
+        const statusEl = document.getElementById('status');
+
+        const btnUpdate = document.getElementById('btn-update');
+        btnUpdate.addEventListener('click', function () {
+            if (!$('#form-update-blog').valid()) {
+                return;
+            }
+
+            // Gửi dữ liệu lên server
+            const data = {
+                title: titleEl.value,
+                content: contentEl.value,
+                description: descriptionEl.value,
+                status: statusEl.value === 'true',
+            }
+
+            // Sử dụng axios để gửi dữ liệu lên server
+            axios.put(`/api/admin/blogs/${blog.id}`, data)
+                .then(function (response) {
+                    toastr.success('Cập nhật bài viết thành công.')
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    toastr.error(error.response.data.message)
+                })
+        })
+
+        // Xóa bài viết
+        const btnDelete = document.getElementById('btn-delete')
+        btnDelete.addEventListener('click', function () {
+            const isConfirm = confirm('Bạn có chắc chắn muốn xóa bài viết này?')
+            if (!isConfirm) {
+                return
+            }
+            axios.delete(`/api/admin/blogs/${blog.id}`)
+                .then(function (response) {
+                    toastr.success('Xóa bài viết thành công')
+                    setTimeout(function () {
+                        window.location.href = '/admin/blogs/own-blog'
+                    }, 1500)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    toastr.error(error.response.data.message)
+                })
+        })
+
+
+
     </script>
 </th:block>
 </body>

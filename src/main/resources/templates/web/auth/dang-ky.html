@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org"
-      th:replace="~{web/layout/layout :: layout(~{:: title}, ~{}, ~{:: #main-content}, ~{:: #js})}">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,12 +8,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+          integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 
 <body style="background-image: url('/image/BG-login.jpg'); background-size: cover; background-repeat: no-repeat;">
-<th:block id="main-content">
+
     <section class="py-4 ">
         <div class="container">
             <div class="row justify-content-center">
@@ -62,8 +70,7 @@
             </div>
         </div>
     </section>
-</th:block>
-<th:block id="js">
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Lấy các thẻ input password
@@ -93,78 +100,90 @@
             }
         }
     });
-    // // Xử lý đăng ký
-    // const registerEmailEl = document.getElementById('register-email');
-    // const registerPasswordEl = document.getElementById('register-password');
-    // const registerForm = document.getElementById('form-register');
-    //
-    // registerForm.addEventListener("submit", (e) => {
-    //     // Check validation
-    //     e.preventDefault();
-    //
-    //     if ($('#form-register').valid()) {
-    //         const registerData = {
-    //             email: registerEmailEl.value,
-    //             password: registerPasswordEl.value
-    //             // Add other registration data as needed
-    //         };
-    //         console.log(registerData);
-    //
-    //         // Send data to server using axios
-    //         axios.post('/api/auth/register', registerData)
-    //             .then((response) => {
-    //                 console.log(response);  // In ra phản hồi từ máy chủ
-    //                 if (response.status === 201) {
-    //                     toastr.success("Đăng ký thành công");
-    //                     setTimeout(() => {
-    //                         window.location.href = '/login';  // Redirect to login page after successful registration
-    //                     }, 1500);
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 console.log(error);
-    //                 console.log(error.response.data.message);
-    //             });
-    //     }
-    // });
-    //
-    // $('#form-register').validate({
-    //     rules: {
-    //         registerEmail: {
-    //             required: true,
-    //             email: true,
-    //         },
-    //         registerPassword: {
-    //             required: true,
-    //             minlength: 6,  // Example: Minimum length of password
-    //         },
-    //         // Add other registration rules as needed
-    //     },
-    //     messages: {
-    //         registerEmail: {
-    //             required: "Vui lòng nhập email",
-    //             email: "Email không đúng định dạng"
-    //         },
-    //         registerPassword: {
-    //             required: "Vui lòng nhập mật khẩu",
-    //             minlength: "Mật khẩu phải chứa ít nhất {0} ký tự"  // Example: Customize minimum length message
-    //         },
-    //         // Add other registration messages as needed
-    //     },
-    //     errorElement: 'span',
-    //     errorPlacement: function (error, element) {
-    //         error.addClass('invalid-feedback');
-    //         element.closest('.form-group').append(error);
-    //     },
-    //     highlight: function (element, errorClass, validClass) {
-    //         $(element).addClass('is-invalid');
-    //     },
-    //     unhighlight: function (element, errorClass, validClass) {
-    //         $(element).removeClass('is-invalid');
-    //     }
-    // });
+    // Xử lý đăng ký
+    const registerEmailEl = document.getElementById('email');
+    const registerNameEl = document.getElementById('name')
+    const registerPasswordEl = document.getElementById('password');
+    const registerForm = document.getElementById('form-register');
+
+
+    registerForm.addEventListener("submit", (e) => {
+        // Check validation
+        e.preventDefault();
+
+
+            const registerData = {
+                email: registerEmailEl.value,
+                password: registerPasswordEl.value,
+                name: registerNameEl.value
+                // Add other registration data as needed
+            };
+            console.log(registerData);
+
+            // Send data to server using axios
+            axios.post('/api/auth/signup', registerData)
+                .then((response) => {
+                    if (response.status === 200) {
+                        toastr.success("Đăng ký thành công");
+                        setTimeout(() => {
+                            window.location.href = '/dang-nhap';  // Redirect to login page after successful registration
+                        }, 1500);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    console.log(error.response.data.message);
+                });
+
+    });
+
+    $('#form-register').validate({
+        rules: {
+            registerEmail: {
+                required: true,
+                email: true,
+            },
+            registerPassword: {
+                required: true,
+                minlength: 6,  // Example: Minimum length of password
+            },
+            // Add other registration rules as needed
+        },
+        messages: {
+            registerEmail: {
+                required: "Vui lòng nhập email",
+                email: "Email không đúng định dạng"
+            },
+            registerPassword: {
+                required: "Vui lòng nhập mật khẩu",
+                // Example: Customize minimum length message
+            },
+            // Add other registration messages as needed
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        }
+    });
 </script>
-</th:block>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+            integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+            integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
 
 </body>
 </html>

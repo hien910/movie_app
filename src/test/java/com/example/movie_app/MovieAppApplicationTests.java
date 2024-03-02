@@ -6,9 +6,11 @@ import com.example.movie_app.model.enums.UserRole;
 import com.example.movie_app.repository.*;
 import com.github.javafaker.Faker;
 import com.github.slugify.Slugify;
+import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.Blob;
 import java.util.Date;
@@ -37,7 +39,8 @@ class MovieAppApplicationTests {
     private GenreRepository genreRepository;
     @Autowired
     private EpisodeRepository episodeRepository;
-
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Test
     void save_genres() {
@@ -56,6 +59,7 @@ class MovieAppApplicationTests {
             genreRepository.save(genre);
         }
     }
+
     @Test
     void save_directors() {
         Faker faker = new Faker();
@@ -265,11 +269,19 @@ class MovieAppApplicationTests {
 //        List<Movie> movies = movieRepository.findAll(Sort.by("view").descending());
 //        movies.forEach(movie -> System.out.println(movie.getView()));
 
-//        Pageable pageable = PageRequest.of(0, 6, Sort.by("publishedAt").descending());
+    //        Pageable pageable = PageRequest.of(0, 6, Sort.by("publishedAt").descending());
 //        Page<Movie> pageData = movieRepository.findByTypeAndStatus(MovieType.PHIM_LE, true, pageable);
 //        System.out.println(pageData.getContent());
 //        System.out.println(pageData.getTotalPages());
 //        System.out.println(pageData.getTotalElements());
 //        pageData.getContent().forEach(System.out::println);
 //    }
+    @Test
+    void update_password() {
+        List<User> userList = userRepository.findAll();
+        userList.forEach(user -> {
+            user.setPassword(passwordEncoder.encode("123"));
+            userRepository.save(user);
+        });
+    }
 }

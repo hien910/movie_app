@@ -59,7 +59,7 @@
                                 <tbody>
                                 <tr th:each="blog : ${blogList}">
                                     <td>
-                                        <a th:href="@{/admin/blogs/{id}/detail (id=${blog.id})}"
+                                        <a th:href="@{/admin/blogs/{id}/detail-blog (id=${blog.id})}"
                                            th:text="${blog.title}"></a>
                                     </td>
                                     <td th:text="${blog.status ? 'Công khai' : 'Nháp'}"></td>

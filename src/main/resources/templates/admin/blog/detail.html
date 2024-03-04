@@ -76,18 +76,18 @@
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <label>Tiêu đề</label>
-                                                <input type="text" class="form-control" id="title"
+                                                <input type="text" class="form-control" id="title" name="title"
                                                        th:value="${blog.title}"/>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Nội dung</label>
-                                                <textarea id="content" th:text="${blog.content}"></textarea>
+                                                <textarea id="content" name="content" th:text="${blog.content}" class="form-control" rows="3"></textarea>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Mô tả ngắn</label>
-                                                <textarea id="description" class="form-control" rows="3"
+                                                <textarea id="description" name="description" class="form-control" rows="3"
                                                           th:text="${blog.description}"></textarea>
                                             </div>
                                         </div>
@@ -200,19 +200,23 @@
             integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>
+    <script th:inline="javascript">
         //Initialize Select2 Elements
-        $(".select2").select2();
+        // $(".select2").select2();
+        //
+        // // Initialize editor
+        // const easyMDE = new EasyMDE({
+        //     element: document.getElementById("content"),
+        //     spellChecker: false,
+        //     maxHeight: "500px",
+        //     renderingConfig: {
+        //         codeSyntaxHighlighting: true,
+        //     },
+        // });
 
-        // Initialize editor
-        const easyMDE = new EasyMDE({
-            element: document.getElementById("content"),
-            spellChecker: false,
-            maxHeight: "500px",
-            renderingConfig: {
-                codeSyntaxHighlighting: true,
-            },
-        });
+
+        const blog = [[${blog}]];
+        console.log(blog);
 
         // Initialize data
         const initData = (data) => {
@@ -266,9 +270,11 @@
             }
         });
 
+
+
         // Lưu bài viết
         const titleEl = document.getElementById('title');
-        const contentEl = document.getElementById('content');
+        // const contentEl = document.getElementById('content');
         const descriptionEl = document.getElementById('description');
         const statusEl = document.getElementById('status');
 
@@ -281,15 +287,19 @@
             // Gửi dữ liệu lên server
             const data = {
                 title: titleEl.value,
-                content: contentEl.value,
+                content: easyMDE.value(),
                 description: descriptionEl.value,
                 status: statusEl.value === 'true',
             }
+
 
             // Sử dụng axios để gửi dữ liệu lên server
             axios.put(`/api/admin/blogs/${blog.id}`, data)
                 .then(function (response) {
                     toastr.success('Cập nhật bài viết thành công.')
+                    setTimeout(function () {
+                        window.location.href = '/admin/blogs'
+                    }, 1500)
                 })
                 .catch(function (error) {
                     console.log(error)
@@ -316,9 +326,6 @@
                     toastr.error(error.response.data.message)
                 })
         })
-
-
-
     </script>
 </th:block>
 </body>

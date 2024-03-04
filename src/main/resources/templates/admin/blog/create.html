@@ -207,7 +207,8 @@
 
         // Lưu bài viết
         const titleEl = document.getElementById('title');
-        let contentEl = document.getElementById('content');
+        // let contentEl = document.getElementById('content');
+
         const descriptionEl = document.getElementById('description');
         const statusEl = document.getElementById('status');
 
@@ -220,7 +221,7 @@
             // Gửi dữ liệu lên server
             const data = {
                 title: titleEl.value,
-                content: contentEl.value,
+                content: easyMDE.value(),
                 description: descriptionEl.value,
                 status: statusEl.value === 'true',
             }
@@ -242,9 +243,9 @@
         })
 
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
-            integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"-->
+<!--            integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="-->
+<!--            crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
 
 
 </th:block>

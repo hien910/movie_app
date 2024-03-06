@@ -95,6 +95,7 @@ public class BlogService {
         blog.setStatus(request.getStatus());
         blog.setUpdatedAt(new Date());
         blog.setPublishedAt(publishAt);
+        blog.setThumbnail(request.getThumbnail());
 
         return blogRepository.save(blog);
     }

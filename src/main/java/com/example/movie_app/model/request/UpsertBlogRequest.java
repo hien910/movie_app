@@ -14,4 +14,5 @@ public class UpsertBlogRequest {
     String description;
     String content;
     Boolean status;
+    String thumbnail;
 }

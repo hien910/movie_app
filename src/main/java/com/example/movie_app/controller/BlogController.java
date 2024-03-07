@@ -14,46 +14,44 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/blogs")
 public class BlogController {
     private final BlogService blogService;
     private final ImageService imageService;
+
     @GetMapping()
-    public String viewHomePage(Model model){
+    public String viewHomePage(Model model) {
         model.addAttribute("blogs", blogService.findAll());
         return "admin/blog/index";
     }
-    @GetMapping("/own-blog")
-    public String viewOwnBlogPage(Model model){
 
-        model.addAttribute("blogList",blogService.findByCurrentUser());
+    @GetMapping("/own-blog")
+    public String viewOwnBlogPage(Model model) {
+
+        model.addAttribute("blogList", blogService.findByCurrentUser());
         return "admin/blog/own-blog";
     }
+
     @GetMapping("/create")
-    public String viewCreateBlogPage(){
+    public String viewCreateBlogPage() {
         return "admin/blog/create";
     }
-//    @GetMapping("/{id}/detail-blog")
+
+    //    @GetMapping("/{id}/detail-blog")
 //    public String viewDetailBlogPage(@PathVariable Integer id, Model model){
 //        Blog blog = blogService.getBlogById(id);
 //        model.addAttribute("blog", blog);
 //        return "admin/blog/detail";
 //    }
     @GetMapping("/{id}/detail-blog")
-
-        public String viewDetailPage(@PathVariable Integer id, Model model,
-                @RequestParam(required = false, defaultValue = "1") Integer page,
-                @RequestParam(required = false, defaultValue = "12") Integer size) {
-            Blog blog = blogService.getBlogById(id);
-
-            Page<Image> pageData = imageService.getAllImagesByCurrentUser(page, size);
-
-            model.addAttribute("blog", blog);
-            model.addAttribute("pageData", pageData);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("images", pageData.getContent());
+    public String viewDetailPage(@PathVariable Integer id, Model model) {
+        Blog blog = blogService.getBlogById(id);
+        model.addAttribute("blog", blog);
+        model.addAttribute("images", imageService.getAllImagesByCurrentUser());
         return "admin/blog/detail";
     }
 }

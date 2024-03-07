@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{admin/layout/layout-blog :: layout-blog(~{:: title}, ~{:: #css}, ~{:: .content-wrapper}, ~{:: #js})}">
+
+<head>
+    <title>Tạo phim</title>
+
+    <th:block id="css">
+        <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css"/>
+        <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
+    </th:block>
+</head>
+
+<body>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="#">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="#">Movie</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            Tạo phim mới
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row py-2">
+                <div class="col-6">
+                    <a href="/admin/movies" class="btn btn-default">
+                        <i class="fas fa-chevron-left"></i> Quay lại
+                    </a>
+                    <button type="button" class="btn btn-info px-4" id="btn-create">
+                        Lưu
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="form-create-movie">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label>Tên phim</label>
+                                            <input type="text" class="form-control" id="title"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Mô tả ngắn</label>
+                                            <textarea id="description" class="form-control" rows="6"></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Đạo diễn</label>
+                                            <div class="select2-purple">
+                                                <select class="select2 form-control" multiple="multiple" id="director">
+                                                    <option th:each="director : ${directors}" th:value="${director.id}"
+                                                            th:text="${director.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Diễn viên</label>
+                                            <div class="select2-purple">
+                                                <select class="select2 form-control" multiple="multiple" id="actor">
+                                                    <option th:each="actor : ${actors}" th:value="${actor.id}"
+                                                            th:text="${actor.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Thể loại</label>
+                                            <div class="select2-purple">
+                                                <select class="select2 form-control" multiple="multiple" id="genre">
+                                                    <option th:each="genre : ${genres}" th:value="${genre.id}"
+                                                            th:text="${genre.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Năm phát hành</label>
+                                            <input type="text" class="form-control" id="releaseYear"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Trạng thái</label>
+                                            <select id="status" class="form-control">
+                                                <option value="false">
+                                                    Nháp
+                                                </option>
+                                                <option value="true">
+                                                    Công khai
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Loại phim</label>
+                                            <select id="type" class="form-control">
+                                                <option th:each="type : ${movieTypes}" th:value="${type}"
+                                                        th:text="${type.getValue()}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<th:block id="js">
+    <script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
+    <script>
+        $(".select2").select2();
+
+        // Thực hiện gọi API tạo phim
+    </script>
+</th:block>
+</body>
+
+</html>

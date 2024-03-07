@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<aside class="main-sidebar sidebar-dark-primary elevation-4" th:fragment="sidebar">
+    <!-- Brand Logo -->
+    <a href="#" class="brand-link">
+        <img src="/admin-assets/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
+             class="brand-image img-circle elevation-3"
+             style="opacity: 0.8"/>
+        <span class="brand-text font-weight-light">Admin</span>
+    </a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false" id="main-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-chart-pie"></i>
+                        <p>
+                            Dashboard
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin/dashboard" class="nav-link pl-5">
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>
+                            Báo cáo
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin/reports" class="nav-link pl-5">
+                                <p>Báo cáo</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-recycle"></i>
+                        <p>
+                            Bài viết
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin/blogs" class="nav-link pl-5">
+                                <p>Tất cả bài viết</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/blogs/own-blogs" class="nav-link pl-5">
+                                <p>Bài viết của tôi</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/blogs/create" class="nav-link pl-5">
+                                <p>Tạo bài viết</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-chart-pie"></i>
+                        <p>
+                            Phim
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin/movies" class="nav-link pl-5">
+                                <p>Danh sách phim</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/movies/create" class="nav-link pl-5">
+                                <p>Tạo phim</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-tree"></i>
+                        <p>
+                            Đạo diễn
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin/directors" class="nav-link pl-5">
+                                <p>Danh sách đạo diễn</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/directors/create" class="nav-link pl-5">
+                                <p>Tạo đạo diễn</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-award"></i>
+                        <p>
+                            Diễn viên
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin/actors" class="nav-link pl-5">
+                                <p>Danh sách diễn viên</p>
+                            </a>
+                            <a href="/admin/actors/create" class="nav-link pl-5">
+                                <p>Tạo diễn viên</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-paper-plane"></i>
+                        <p>
+                            User
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin/users" class="nav-link pl-5">
+                                <p>Danh sách user</p>
+                            </a>
+                            <a href="/admin/users/create" class="nav-link pl-5">
+                                <p>Tạo nhà user</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-folder-open"></i>
+                        <p>
+                            Thể loại
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin/genres" class="nav-link pl-5">
+                                <p>Danh sách thể loại</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
+</body>
+</html>

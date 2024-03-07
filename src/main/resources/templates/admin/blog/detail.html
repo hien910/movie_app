@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{admin/blog/layout/layout-blog.html :: layout-blog(~{::title},~{::#css},~{::#main-content},~{::#js})}">
+      th:replace="~{admin/layout/layout-blog.html :: layout-blog(~{::title},~{::#css},~{::#main-content},~{::#js})}">
 <head>
 
     <title>AdminLTE 3 | Dashboard</title>
@@ -11,6 +11,9 @@
         <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
               integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+              crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.css"
+              integrity="sha512-K1k7jSn9RDKEcn/ugqVVvWYu0bcS3q1w6m/5pQSnrj0bCfIqF6Wk49lkmckSb4wglvTP9V17LtS0q0XxYccXbg=="
               crossorigin="anonymous" referrerpolicy="no-referrer"/>
         <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
         <style>
@@ -211,30 +214,7 @@
                         </div>
 
                         <!-- Hiển thị phần phân trang -->
-                        <div class="pagination-container d-flex justify-content-center"
-                             th:if="${pageData.getTotalPages() > 1}">
-                            <nav aria-label="...">
-                                <ul class="pagination">
-                                    <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
-                                        <a class="page-link"
-                                           th:href="@{/admin/blogs/{id}/detail-blog (id=${blog.id}, page=${currentPage - 1})}">Previous</a>
-                                    </li>
-
-                                    <li class="page-item"
-                                        th:each="pageNumber : ${#numbers.sequence(1, pageData.getTotalPages())}"
-                                        th:classappend="${pageNumber == currentPage ? 'active' : ''}">
-                                        <a class="page-link"
-                                           th:href="@{/admin/blogs/{id}/detail-blog (id=${blog.id}, page=${pageNumber})}"
-                                           th:text="${pageNumber}"></a>
-                                    </li>
-
-                                    <li class="page-item"
-                                        th:classappend="${currentPage == pageData.getTotalPages() ? 'disabled' : ''}">
-                                        <a class="page-link"
-                                           th:href="@{/admin/blogs/{id}/detail-blog (id=${blog.id}, page=${currentPage + 1})}">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
+                        <div class="pagination-container d-flex justify-content-center" id="image-pagination">
                         </div>
                     </div>
 
@@ -269,6 +249,9 @@
             integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.js"
+            integrity="sha512-GzbaI5EsNzdEUq6/2XLYpr1y9CUZRIVsUeWTAFgULtQa5jZ3Nug8i0nZKM6jp9NffBCZhymPPQFcF0DK+JkRpw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script th:inline="javascript">
         // Initialize Select2 Elements
         $(".select2").select2();
@@ -432,8 +415,7 @@
             axios.post("/api/admin/images", formData)
                 .then(res => {
                     imageList.unshift(res.data);
-                    renderImages(imageList);
-
+                    renderPagination(imageList);
                     toastr.success("Upload ảnh thành công");
                 })
                 .catch(err => {
@@ -482,8 +464,7 @@
             axios.delete(`/api/admin/images/${imageId}`)
                 .then(res => {
                     imageList = imageList.filter(image => image.id !== imageId);
-                    renderImages(imageList);
-
+                    renderPagination(imageList);
                     btnChoseImage.disabled = true;
                     btnDeleteImage.disabled = true;
 
@@ -494,8 +475,21 @@
                     toastr.error(err.response.data.message);
                 })
         });
+        const  renderPagination = (images) =>{
+            $('#image-pagination').pagination({
+                dataSource:images,
+                pageSize: 12,
+                pageRange: null,
+                showPageNumbers: true,
+                callback: function(data, pagination) {
+                    // template method of yourself
+                    renderImages(data);
+                }
+            })
+        };
 
-        renderImages(imageList);
+        renderPagination(imageList);
+
     </script>
 </th:block>
 </body>

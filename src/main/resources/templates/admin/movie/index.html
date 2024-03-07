@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/layout-blog.html :: layout-blog(~{::title},~{:: #css},~{:: .content-wrapper},~{:: #js})}">
+<head>
+    <title>AdminLTE 3 | Dashboard</title>
+</head>
+<th:block id="css">
+    <link rel="stylesheet" href="/admin-assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="/admin-assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="/admin-assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+          integrity="sha512-BI4fk3tFwrgAxo1i8C4u5bXlaaTTOgOgR24vIz1LfD+OSlKCitHXiv3U6W2O4/MPRmZDkV7ccFvC8tkhckn5aA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</th:block>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="content-wrapper">
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" id="main-content">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="#">Dashboard</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                Phim
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row py-2">
+                    <div class="col-12">
+                        <a href="/admin/movies/create" type="button" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Tạo phim mới
+                        </a>
+                        <a href="/admin/movies" type="button" class="btn btn-info">
+                            <i class="fas fa-redo"></i> Refresh
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table table-bordered table-hover" id="movie-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Tiêu đề</th>
+                                        <th>Mô tả</th>
+                                        <th>Thể loại</th>
+                                        <th>Lượt xem</th>
+                                        <th>Đánh giá</th>
+                                        <th>Trạng thái</th>
+                                        <th>Ngày tạo</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="movie : ${movies}">
+                                        <td>
+                                            <a th:href="@{/admin/movies/{id}/detail-movie (id=${movie.id})}"
+                                               th:text="${movie.title}">Top 11 phim có doanh thu cao nhất mọi thời đại</a>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/admin/movies/{id}/detail-movie (id=${movie.id})}"
+                                               th:text="${movie.description}"></a>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/admin/movies/{id}/detail-movie (id=${movie.id})}"
+                                               th:text="${movie.type}"></a>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/admin/movies/{id}/detail-movie (id=${movie.id})}"
+                                               th:text="${movie.view}"></a>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/admin/movies/{id}/detail-movie (id=${movie.id})}"
+                                               th:text="${movie.rating}">
+                                                <i class="fas fa-star"></i>
+                                            </a>
+                                        </td>
+                                        <td th:text="${movie.status ? 'Công khai' : 'Nháp'}">Công khai</td>
+                                        <td th:text="${#dates.format(movie.createdAt, 'dd/MM/yyyy')}">09/01/2024</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<th:block id="js">
+    <script src="/admin-assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script>
+        $('#movie-table').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            "order": [] // Khi load trang sẽ không sắp xếp theo cột nào cả
+        });
+    </script>
+</th:block>
+
+</body>
+
+</html>

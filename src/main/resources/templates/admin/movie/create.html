@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org"
-      th:replace="~{admin/layout/layout-blog :: layout-blog(~{:: title}, ~{:: #css}, ~{:: .content-wrapper}, ~{:: #js})}">
+      th:replace="~{admin/layout/layout :: layout(~{:: title}, ~{:: #css}, ~{:: .content-wrapper}, ~{:: #js})}">
 
 <head>
     <title>Tạo phim</title>
@@ -133,11 +133,140 @@
 </div>
 
 <th:block id="js">
+    <script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
     <script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+            integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     <script>
         $(".select2").select2();
 
+        $('#form-create-movie').validate({
+            rules: {
+                title: {
+                    required: true
+                },
+                description: {
+                    required: true
+                },
+                directorIds: {
+                    required: true,
+                    minlength: 1 // Ít nhất một đạo diễn được chọn
+                },
+                actorIds: {
+                    required: true,
+                    minlength: 1 // Ít nhất một diễn viên được chọn
+                },
+                genreIds: {
+                    required: true,
+                    minlength: 1 // Ít nhất một thể loại được chọn
+                },
+                releaseYear: {
+                    required: true
+                },
+                status: {
+                    required: true
+                },
+                type: {
+                    required: true
+                }
+
+            },
+            messages: {
+                title: {
+                    required: "Tiêu đề không được để trống"
+                },
+                description: {
+                    required: "Nội dung không được để trống"
+                },
+                directorIds: {
+                    required: "Ít nhất một đạo diễn được chọn",
+                    minlength: "Ít nhất một đạo diễn được chọn"
+                },
+                actorIds: {
+                    required: "Ít nhất một diễn viên được chọn",
+                    minlength: "Ít nhất một diễn viên được chọn"
+                },
+                genreIds: {
+                    required: "Ít nhất một thể loại được chọn",
+                    minlength: "Ít nhất một thể loại được chọn"
+                },
+                releaseYear: {
+                    required: "Năm phát hành không được để trống"
+                },
+                status: {
+                    required: "Trang thái không được để trống"
+                },
+                type: {
+                    required: "Loại phim không được để trống"
+                }
+
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+
         // Thực hiện gọi API tạo phim
+        const titleEl = document.getElementById('title');
+        const descriptionEl = document.getElementById('description');
+        const statusEl = document.getElementById('status');
+        const typeEl = document.getElementById('type');
+        const releaseYearEl = document.getElementById('releaseYear');
+
+
+        const btnCreate = document.getElementById('btn-create');
+
+        btnCreate.addEventListener('click', function () {
+            if (!$('#form-create-movie').valid()) {
+                return;
+            }
+            // Kiểm tra nếu giá trị không phải là một số nguyên
+            if (!/^\d+$/.test(releaseYearEl.value)) {
+                alert('Năm phát hành phải là một số nguyên.');
+                return;
+            }
+
+
+            // Gửi dữ liệu lên server
+            const data = {
+                title: titleEl.value,
+                description: descriptionEl.value,
+                status: statusEl.value === 'true',
+                type: typeEl.value,
+                actorIds: $('#actor').val().map(value => parseInt(value)),
+                directorIds: $('#director').val().map(value => parseInt(value)),
+                genreIds: $('#genre').val().map(value => parseInt(value)),
+                releaseYear: parseInt(releaseYearEl.value)
+            }
+            console.log(data)
+
+            // Sử dụng axios để gửi dữ liệu lên server
+            axios.post('/api/admin/movies', data)
+
+                .then(function (response) {
+                    toastr.success('Tạo phim thành công')
+                    setTimeout(function () {
+                        window.location.href = `/admin/movies/${response.data.id}/detail-movie`
+                    }, 1500)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    toastr.error(error.response.data.message)
+                })
+        });
+
+
     </script>
 </th:block>
 </body>

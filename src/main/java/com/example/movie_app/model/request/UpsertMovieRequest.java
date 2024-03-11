@@ -21,4 +21,5 @@ public class UpsertMovieRequest {
     List<Integer> directorIds;
     List<Integer> actorIds;
     List<Integer> genreIds;
+    String porter;
 }

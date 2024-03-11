@@ -17,19 +17,19 @@ public class MovieApi {
     private final MovieService movieService;
 
     @PostMapping
-    public ResponseEntity<?> createBlog(@RequestBody UpsertMovieRequest request){
+    public ResponseEntity<?> createMovie(@RequestBody UpsertMovieRequest request){
         Movie movie = movieService.creatMovie(request);
         return ResponseEntity.ok(movie);
     }
 
     @PutMapping("/{id}")
-    public  ResponseEntity<?> updateBlog(@RequestBody UpsertMovieRequest request,@PathVariable Integer id){
+    public  ResponseEntity<?> updateMovie(@RequestBody UpsertMovieRequest request,@PathVariable Integer id){
         Movie movie = movieService.updateMovie(request,id);
         return ResponseEntity.ok(movie);
     }
 
     @DeleteMapping("/{id}")
-    public  ResponseEntity<?> deleteBlog(@PathVariable Integer id){
+    public  ResponseEntity<?> deleteMovie(@PathVariable Integer id){
         movieService.deleteMovie(id);
         return ResponseEntity.noContent().build();
     }

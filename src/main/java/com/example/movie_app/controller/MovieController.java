@@ -1,15 +1,12 @@
 package com.example.movie_app.controller;
 
-import com.example.movie_app.entity.Blog;
-import com.example.movie_app.entity.Image;
-import com.example.movie_app.entity.Movie;
+import com.example.movie_app.entity.*;
 import com.example.movie_app.model.enums.MovieType;
 import com.example.movie_app.repository.ActorRepository;
 import com.example.movie_app.repository.DirectorRepository;
+import com.example.movie_app.repository.EpisodeRepository;
 import com.example.movie_app.repository.GenreRepository;
-import com.example.movie_app.service.BlogService;
-import com.example.movie_app.service.ImageService;
-import com.example.movie_app.service.MovieService;
+import com.example.movie_app.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -18,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,6 +27,8 @@ public class MovieController {
     private final DirectorRepository directorRepository;
     private final ActorRepository actorRepository;
     private final GenreRepository genreRepository;
+    private final EpisodeRepository episodeRepository;
+
     @GetMapping()
     public String viewHomePage(Model model){
         model.addAttribute("movies", movieService.findAll());
@@ -45,17 +46,19 @@ public class MovieController {
 
     @GetMapping("/{id}/detail-movie")
 
-    public String viewDetailPage(@PathVariable Integer id, Model model,
-                                 @RequestParam(required = false, defaultValue = "1") Integer page,
-                                 @RequestParam(required = false, defaultValue = "12") Integer size) {
+    public String viewDetailPage(@PathVariable Integer id, Model model) {
         Movie movie = movieService.getMovieById(id);
-
-        Page<Image> pageData = imageService.getAllImagesByCurrentUser(page, size);
+        List<Episode> episodeList = episodeRepository.findAllByMovieId(id);
+        List<Actor> actorList = actorRepository.findAll();
+        List<Director> directorList = directorRepository.findAll();
+        List<Genre> genreList = genreRepository.findAll();
 
         model.addAttribute("movie", movie);
-        model.addAttribute("pageData", pageData);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("images", pageData.getContent());
+        model.addAttribute("images", imageService.getAllImagesByCurrentUser());
+        model.addAttribute("episodeList", episodeList);
+        model.addAttribute("actorList", actorList);
+        model.addAttribute("directorList", directorList);
+        model.addAttribute("genreList", genreList);
         return "admin/movie/detail";
     }
 }

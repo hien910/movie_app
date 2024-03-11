@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{admin/layout/layout-blog.html :: layout-blog(~{::title},~{::#css},~{::#main-content},~{::#js})}">
+      th:replace="~{admin/layout/layout.html :: layout(~{::title},~{::#css},~{::#main-content},~{::#js})}">
 <head>
 
     <title>Create blog</title>
@@ -243,11 +243,6 @@
         })
 
     </script>
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"-->
-<!--            integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="-->
-<!--            crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
-
-
 </th:block>
 </body>
 

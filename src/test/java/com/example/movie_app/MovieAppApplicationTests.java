@@ -241,6 +241,45 @@ class MovieAppApplicationTests {
     }
 
     @Test
+    void save_episodes() {
+        // Lấy danh sách phim
+        List<Movie> movieList = movieRepository.findAll();
+        Random random = new Random();
+
+        // Duyệt qua từng phim -> Kiểm tra type phim
+        for (Movie movie: movieList) {
+            if(movie.getType().getValue().equals("Phim bộ")){
+                for (int i = 0; i < random.nextInt(5)+5; i++) {
+                    Episode episode = Episode.builder()
+                            .title("Tập " + (i+1) )
+                            .displayOrder(i+1)
+                            .status(true)
+                            .createdAt(new Date())
+                            .updatedAt(new Date())
+                            .publishedAt(new Date())
+                            .movie(movie)
+                            .build();
+                    episodeRepository.save(episode);
+                }
+            }else {
+                Episode episode = Episode.builder()
+                        .title("Full")
+                        .displayOrder(1)
+                        .status(true)
+                        .createdAt(new Date())
+                        .updatedAt(new Date())
+                        .publishedAt(new Date())
+                        .movie(movie)
+                        .build();
+                episodeRepository.save(episode);
+            }
+        }
+        // Nếu type = PHIM_BO -> Tạo ra 5 -> 10 tập phim tương ứng
+        // Nếu type = PHIM_LE hoặc PHIM_CHIEU_RAP -> Tạo ra 1 tập phim tương ứng
+        // Chưa cần thông tin về videoUrl và duration (set null)
+    }
+
+    @Test
     void save_reviews() {
         Faker faker = new Faker();
         Random random = new Random();

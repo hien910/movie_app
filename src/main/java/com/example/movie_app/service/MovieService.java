@@ -8,6 +8,7 @@ import com.example.movie_app.repository.ActorRepository;
 import com.example.movie_app.repository.DirectorRepository;
 import com.example.movie_app.repository.GenreRepository;
 import com.example.movie_app.repository.MovieRepository;
+import com.github.javafaker.Faker;
 import com.github.slugify.Slugify;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,7 @@ public class MovieService   {
         if(status){
             publishAt = new Date();
         }
+        Faker faker = new Faker();
 
         // Bổ sung các thông tin khác cho movie từ request
         Movie movie = Movie.builder()
@@ -88,6 +90,7 @@ public class MovieService   {
                 .slug(slugify.slugify(request.getTitle()))
                 .description(request.getDescription())
                 .status(status)
+                .poster(faker.company().logo())
                 .build();
 
         movieRepository.save(movie);

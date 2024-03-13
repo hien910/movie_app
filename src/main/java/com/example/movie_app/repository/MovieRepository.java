@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,8 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
     Page<Movie> findByStatus(Boolean status, Pageable pageable);
 
     Optional<Movie> findByIdAndSlugAndStatus(Integer id, String slug, Boolean status);
+//    @Query("SELECT m FROM Movie m WHERE m.createdAt BETWEEN :start AND :end ORDER BY m.createdAt DESC")
+    List<Movie> findMovieByCreatedAtBetweenOrderByCreatedAtDesc(Date start, Date end);
 
 
     Movie findMovieById(Integer id);

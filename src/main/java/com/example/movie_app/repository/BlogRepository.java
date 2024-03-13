@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -20,6 +22,5 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     List<Blog> findByUser_idOrderByCreatedAtDesc(Integer id);
 
 
-
-
+    List<Blog> findBlogByCreatedAtBetweenOrderByCreatedAtDesc(Date createdAt, Date createdAt2);
 }

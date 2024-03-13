@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -110,6 +111,10 @@ public class BlogService {
     public Blog getBlogById(Integer id) {
         return blogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy bài viết với id = " + id));
+    }
+
+    public List<Blog> findBlogOfMonth(Date start, Date end) {
+        return blogRepository.findBlogByCreatedAtBetweenOrderByCreatedAtDesc(start,end);
     }
 }
 

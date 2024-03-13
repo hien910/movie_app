@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class MovieService   {
         return movieRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phim với id = " + id));
     }
+
     public Movie getMovie(Integer id, String slug, Boolean status) {
         return movieRepository.findByIdAndSlugAndStatus(id, slug, status).orElse(null);
     }
@@ -46,6 +48,9 @@ public class MovieService   {
     }
     public List<Movie> findMovieRelated(MovieType movieType){
         return movieRepository.findMoviesByTypeOrderByRatingDesc(MovieType.valueOf(String.valueOf(movieType)));
+    }
+    public List<Movie> findMovieOfMonth(Date start, Date end){
+        return movieRepository.findMovieByCreatedAtBetweenOrderByCreatedAtDesc(start, end);
     }
     public Page<Movie> getMoviesByType(MovieType movieType, Boolean status, Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("publishedAt").descending()); // page trong jpa bắt đầu từ 0

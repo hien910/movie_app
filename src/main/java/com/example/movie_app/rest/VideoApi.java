@@ -14,19 +14,19 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("api/videos")
+@RequestMapping("api")
 @RequiredArgsConstructor
 public class VideoApi {
     private final VideoService videoService;
 
     @PostMapping("/admin/videos")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadVideo(@RequestParam("file") MultipartFile file) {
         return new ResponseEntity<>(videoService.uploadVideo(file), HttpStatus.CREATED);
     }
 
 
     @DeleteMapping("/admin/videos/{id}")
-    public ResponseEntity<?> deleteImage(@PathVariable String id) {
+    public ResponseEntity<?> deleteVideo(@PathVariable String id) {
         videoService.deleteVideo(id);
         return ResponseEntity.noContent().build();
     }
@@ -41,13 +41,13 @@ public class VideoApi {
             String[] ranges = rangeHeader.substring("bytes=".length()).split("-");
             rangeStart = Long.parseLong(ranges[0]);
             rangeEnd = ranges.length > 1 ? Long.parseLong(ranges[1]) : Long.MAX_VALUE;
-        }
+    }
 
-        ResourceRegion resourceRegion = videoService.getVideoResourceRegion(fileName, rangeStart, rangeEnd);
+    ResourceRegion resourceRegion = videoService.getVideoResourceRegion(fileName, rangeStart, rangeEnd);
 
         return ResponseEntity
                 .status(HttpStatus.PARTIAL_CONTENT)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resourceRegion);
     }
 }

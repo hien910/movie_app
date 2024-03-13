@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
     List<Review> findReviewByMovie_IdOrderByCreatedAtDesc(Integer id);
+
+    List<Review> findReviewByMovie_Id(Integer id);
 }

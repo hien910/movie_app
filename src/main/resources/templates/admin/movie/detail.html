@@ -6,6 +6,7 @@
     <title th:text="${movie.title}">Thực hành làm ứng dụng Meal Finder API với Javascript (Phần 2)</title>
 
     <th:block id="css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css" />
         <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css"/>
         <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
@@ -194,17 +195,123 @@
                                             </button>
                                         </div>
 
+
                                     </div>
                                 </div>
                             </form>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <h4 class="mb-3">Danh sách tập phim</h4>
+                                                </div>
+                                                <div>
+                                                    <button id="create-episode" class="rounded overflow-hidden "
+                                                            type="button" th:if="${movie.getType().value =='Phim bộ'|| episodes.size()==0}"
+                                                            th:onclick="|createEpisode()|">
+                                                        <span class><i class="fa-solid fa-plus"></i> Thêm Tập phim</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <table id="table-director" class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 5%">#</th>
+                                                    <th style="width: 20%">Tên tập phim</th>
+                                                    <th style="width: 40%">Link</th>
+                                                    <th style="width: 10%">Thời lượng</th>
+                                                    <th style="width: 10%">Trạng thái</th>
+                                                    <th style="width: 15%"></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="episode : ${episodes}">
+                                                    <td th:text="${episode.displayOrder}">#</td>
+                                                    <td th:text="${episode.title}">Tên tập phim</td>
+                                                    <td th:text="${episode.videoUrl}">Link</td>
+                                                    <td th:text="${episode.duration}">Thời lượng</td>
+                                                    <td th:text="${episode.status ? 'Công khai' : 'Nháp'}">Trạng thái</td>
+                                                    <td>
+                                                        <label th:for="|episode-input-${episode.id}|"
+                                                               class="btn btn-primary btn-sm mb-0"><i
+                                                                class="fas fa-upload"></i></label>
+                                                        <input type="file" class="d-none" th:id="|episode-input-${episode.id}|"
+                                                               th:onchange="|uploadVideo(event, ${episode.id})|">
+
+                                                        <button class="btn btn-warning btn-sm text-white"
+                                                                th:onclick="|previewVideo(${episode.id})|">
+                                                            <i class="fas fa-play"></i>
+                                                        </button>
+                                                        <button class="btn btn-success btn-sm" th:onclick="|updateEpisode(${episode.id})|"><i class="fas fa-pencil-alt"></i>
+                                                        </button>
+                                                        <button class="btn btn-danger btn-sm" th:onclick="|deleteEpisode(${episode.id})|"><i class="fas fa-trash-alt"></i></button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
     </section>
+    <div class="modal fade" id="update-episode" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cập nhật tập phim</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+
+                            <div class="form-group">
+                                <label>Thứ tự</label>
+                                <input type="text" class="form-control" id="update-displayOrder"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Tiêu đề</label>
+                                <input type="text" class="form-control" id="update-title-episode"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Trạng thái</label>
+                                <select id="update-status-episode" class="form-control">
+                                    <option value="false">
+                                        Nháp
+                                    </option>
+                                    <option value="true">
+                                        Công khai
+                                    </option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="modal-body">
+                            <video width="100%" controls>
+                                <source src="" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-warning" id="btn-chose-video" >
+                            Chọn video</button>
+                    <button class="btn btn-success" id="btn-save-video">Lưu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="modal-image" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -238,7 +345,43 @@
                     <div class="pagination-container d-flex justify-content-center" id="image-pagination">
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="modal fade" id="modal-create-episode">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Tạo tập phim mới</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="form-create-episode">
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input name="titleEpisode" type="text" class="form-control" id="create-title-episode"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Trạng thái</label>
+                            <select id="create-status-episode" class="form-control">
+                                <option value="false">
+                                    Nháp
+                                </option>
+                                <option value="true">
+                                    Công khai
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="create-save-episode" type="button" class="btn btn-primary">Lưu</button>
+                    </div>
+                </form>
 
             </div>
         </div>
@@ -313,6 +456,9 @@
                 },
                 type: {
                     required: true
+                },
+                poster: {
+                    required: true
                 }
 
             },
@@ -343,6 +489,8 @@
                 },
                 type: {
                     required: "Loại phim không được để trống"
+                },type: {
+                    required: "Poster không được để trống"
                 }
 
             },
@@ -358,6 +506,7 @@
                 $(element).removeClass('is-invalid');
             }
         });
+
         // Thực hiện gọi API tạo phim
         const titleEl = document.getElementById('title');
         const descriptionEl = document.getElementById('description');
@@ -365,6 +514,7 @@
         const typeEl = document.getElementById('type');
         const releaseYearEl = document.getElementById('releaseYear');
         const imagePreviewEl = document.getElementById('image-preview');
+
 
 
         const btnUpdate = document.getElementById('btn-update');
@@ -392,13 +542,14 @@
                 releaseYear: parseInt(releaseYearEl.value),
                 poster: imagePreviewEl.src
             }
-            console.log(data)
+            console.log(data);
+
 
             // Sử dụng axios để gửi dữ liệu lên server
             axios.put(`/api/admin/movies/${movie.id}`, data)
 
                 .then(function (response) {
-                    toastr.success('Tạo phim thành công')
+                    toastr.success('Cập nhật phim thành công')
                     setTimeout(function () {
                         window.location.href = `/admin/movies`
                     }, 1500)
@@ -535,9 +686,152 @@
                 }
             })
         };
-
         renderPagination(imageList);
 
+        const episodeList = [[${episodes}]];
+
+        // Xem trước video
+        const previewVideo = (episodeId) => {
+            // Tìm kiếm tập phim theo id
+            const episode = episodeList.find(e => e.id === episodeId)
+
+            // Lấy ra thẻ video và gán src cho nó
+            const videoEl = document.querySelector('#modal-preview-video video')
+            videoEl.src = episode.videoUrl
+
+            // Hiển thị modal
+            $('#modal-preview-video').modal('show')
+
+        }
+        const updateTitleEpisode = document.getElementById('update-title-episode')
+        const updateDisplayOrderEpisode = document.getElementById('update-displayOrder')
+        const updateStatusEpisode = document.getElementById('update-status-episode')
+        const saveEpisodeUpdate = document.getElementById('btn-save-video')
+        let idEps = null;
+        const updateEpisode = (episodeId) => {
+            // Tìm kiếm tập phim theo id
+            const episode = episodeList.find(e => e.id === episodeId);
+            console.log(episode);
+            updateTitleEpisode.value = episode[0].title;
+            updateStatusEpisode.value = episode[0].status;
+            updateDisplayOrderEpisode.value= episode[0].displayOrder;
+            idEps=episodeId;
+
+            // Hiển thị modal
+            $('#update-episode').modal('show');
+        }
+        saveEpisodeUpdate.addEventListener('click' ,(e) =>{
+            e.preventDefault();
+            if (!$('#form-create-episode').valid()) return;
+            let status = false;
+            if (saveEpisodeUpdate.getAttribute("value")==="true"){
+                status=true;
+            }
+            const data = {
+                movie : movie,
+                title: updateTitleEpisode.value,
+                status : updateStatusEpisode.value,
+                displayOder : updateDisplayOrderEpisode.value
+            }
+            console.log(data);
+            axios.put(`/api/admin/episodes/${idEps}`, data)
+                .then(res => {
+                    toastr.success('Thêm mới thành công.')
+                    setTimeout(()=>{
+                        window.location.reload()
+                    },1500)
+                })
+                .catch(err => {
+                    console.log(err)
+                    toastr.error(err.response.data.message)
+                })
+
+        })
+        // Nếu đóng modal preview video thì reset lại src của video
+        $('#modal-preview-video').on('hidden.bs.modal', function (event) {
+            const videoEl = document.querySelector('#modal-preview-video video')
+            videoEl.src = "";
+        })
+
+        // Upload video cho tập phim
+        const uploadVideo = (event, episodeId) => {
+            // Lấy ra file vừa được chọn
+            const file = event.target.files[0]
+
+            // Tạo đối tượng form data để đưa dữ liệu vào gửi đi
+            const formData = new FormData()
+            formData.append('file', file)
+
+            // Gọi api sử dung axios
+            axios.post(`/api/admin/episodes/${episodeId}/upload-video`, formData)
+                .then(res => {
+                    toastr.success('Upload video thành công.')
+
+                    // Reload lại trang sau 1.5s
+                    setTimeout(() => {
+                        location.reload()
+                    }, 1500)
+                })
+                .catch(err => {
+                    console.log(err)
+                    toastr.error(err.response.data.message)
+                })
+        }
+        const createEpisode = ()=>{
+            $('#modal-create-episode').modal('show');
+        }
+        const titleEpisode = document.getElementById("create-title-episode");
+        const statusEpisode = document.getElementById("create-status-episode");
+        const saveEpisode = document.getElementById('create-save-episode');
+        saveEpisode.addEventListener('click' ,(e) =>{
+            e.preventDefault();
+            if (!$('#form-create-episode').valid()) return;
+            let status = false;
+            if (statusEpisode.getAttribute("value")==="true"){
+                status=true;
+            }
+            const data = {
+                movie: movie,
+                title: titleEpisode.value,
+                status : status,
+                displayOrder : episodeList.length+1
+            }
+            console.log(data);
+            axios.post(`/api/admin/episodes`, data)
+                .then(res => {
+                    toastr.success('Thêm mới thành công.')
+                    setTimeout(()=>{
+                        window.location.reload()
+                    },1500)
+                })
+                .catch(err => {
+                    console.log(err)
+                    toastr.error(err.response.data.message)
+                })
+
+        })
+
+
+        // Xóa tập phim
+        function deleteEpisode(episodeId) {
+            const isConfirm = confirm('Bạn có chắc chắn muốn xóa phim này?');
+
+            if (!isConfirm) {
+                return;
+            }
+
+            axios.delete(`/api/admin/episodes/${episodeId}`)
+                .then(function (response) {
+                    toastr.success('Xóa phim thành công');
+                    setTimeout(function () {
+                        location.reload()
+                    }, 1500);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    toastr.error(error.response.data.message);
+                });
+        }
 
 
     </script>

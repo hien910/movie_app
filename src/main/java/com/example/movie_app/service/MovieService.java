@@ -4,10 +4,7 @@ import com.example.movie_app.entity.*;
 import com.example.movie_app.exception.ResourceNotFoundException;
 import com.example.movie_app.model.enums.MovieType;
 import com.example.movie_app.model.request.UpsertMovieRequest;
-import com.example.movie_app.repository.ActorRepository;
-import com.example.movie_app.repository.DirectorRepository;
-import com.example.movie_app.repository.GenreRepository;
-import com.example.movie_app.repository.MovieRepository;
+import com.example.movie_app.repository.*;
 import com.github.javafaker.Faker;
 import com.github.slugify.Slugify;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +25,20 @@ public class MovieService   {
     private final DirectorRepository directorRepository;
     private final ActorRepository actorRepository;
     private final GenreRepository genreRepository;
+    private final ReviewRepository reviewRepository;
 
     public List<Movie> findByTypeOrderByPublishAtDesc(MovieType movieType) {
         return movieRepository.findByTypeOrderByPublishAtDesc(MovieType.valueOf(String.valueOf(movieType)));
     }
     public Movie findMovieById(Integer id){
-
         return movieRepository.findMovieById(id);
+    }
+    public Movie getMovie(Integer id) {
+        return movieRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phim với id = " + id));
+    }
+    public Movie getMovie(Integer id, String slug, Boolean status) {
+        return movieRepository.findByIdAndSlugAndStatus(id, slug, status).orElse(null);
     }
     public Page<Movie> getHotMovies(Boolean status, Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("view").descending()); // page trong jpa bắt đầu từ 0
@@ -118,14 +122,15 @@ public class MovieService   {
         movie.setTitle(request.getTitle());
         movie.setDescription(request.getDescription());
         movie.setSlug(slugify.slugify(request.getTitle()));
+        movie.setPoster(request.getPoster());
         movie.setStatus(status);
         movie.setActors(actors);
         movie.setGenres(genres);
         movie.setDirectors(directors);
         movie.setPublishedAt(publishAt);
         movie.setUpdatedAt(new Date());
+        movie.setReleaseYear(request.getReleaseYear());
         movie.setType(request.getType());
-        movie.setPoster(request.getPorter());
 
         return movieRepository.save(movie);
 
@@ -133,6 +138,8 @@ public class MovieService   {
 
     public void deleteMovie(Integer id) {
         Movie movie = movieRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phim với id = " + id));
-         movieRepository.delete(movie);
+        List<Review> reviewList = reviewRepository.findReviewByMovie_Id(id);
+        reviewRepository.deleteAll(reviewList);
+        movieRepository.delete(movie);
     }
 }

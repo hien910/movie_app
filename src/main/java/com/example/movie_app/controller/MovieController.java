@@ -27,7 +27,7 @@ public class MovieController {
     private final DirectorRepository directorRepository;
     private final ActorRepository actorRepository;
     private final GenreRepository genreRepository;
-    private final EpisodeRepository episodeRepository;
+    private final EpisodeService episodeService;
 
     @GetMapping()
     public String viewHomePage(Model model){
@@ -48,17 +48,19 @@ public class MovieController {
 
     public String viewDetailPage(@PathVariable Integer id, Model model) {
         Movie movie = movieService.getMovieById(id);
-        List<Episode> episodeList = episodeRepository.findAllByMovieId(id);
+        List<Episode> episodes = episodeService.getEpisodeListOfMovie(id);
         List<Actor> actorList = actorRepository.findAll();
         List<Director> directorList = directorRepository.findAll();
         List<Genre> genreList = genreRepository.findAll();
 
         model.addAttribute("movie", movie);
         model.addAttribute("images", imageService.getAllImagesByCurrentUser());
-        model.addAttribute("episodeList", episodeList);
+
         model.addAttribute("actorList", actorList);
         model.addAttribute("directorList", directorList);
         model.addAttribute("genreList", genreList);
+        model.addAttribute("episodes", episodes);
         return "admin/movie/detail";
     }
+
 }

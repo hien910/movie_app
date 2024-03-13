@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{web/layout/layout :: layout(~{:: title}, ~{:: #css}, ~{:: #main-content}, ~{:: #js})}">
+<head>
+    <title th:text="${movie.title}">Chi tiết phim</title>
+
+    <th:block id="css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.css"
+              integrity="sha512-K1k7jSn9RDKEcn/ugqVVvWYu0bcS3q1w6m/5pQSnrj0bCfIqF6Wk49lkmckSb4wglvTP9V17LtS0q0XxYccXbg=="
+              crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    </th:block>
+</head>
+<body>
+
+<th:block id="main-content">
+    <section class="py-4">
+        <div class="container">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="text-primary" href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item">
+                        <a th:switch="${movie.type.value}">
+                            <a class="text-primary" th:case="'Phim lẻ'" href="/phim-le">Phim lẻ</a>
+                            <a class="text-primary" th:case="'Phim bộ'" href="/phim-bo">Phim bộ</a>
+                            <a class="text-primary" th:case="'Phim chiếu rạp'" href="/phim-chieu-rap">Phim chiếu rạp</a>
+                            <a class="text-primary" th:case="*" href="#">Không xác định</a> <!-- Trường hợp mặc định -->
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page" th:text="${movie.title}">Đầu Gấu Đụng Đầu Đất
+                    </li>
+                </ol>
+            </nav>
+
+            <div id="#screen">
+                <video width="100%" controls>
+                    <source th:src="${currentEpisode.videoUrl}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-3">
+                    <img id="movie-poster" class="rounded w-100"
+                         th:src="${movie.poster}" th:alt="${movie.title}">
+                </div>
+                <div class="col-9">
+                    <h4 class="mb-3" th:text="${movie.title}">Đầu Gấu Đụng Đầu Đất</h4>
+                    <div class="p-3 bg-body-tertiary">
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Thể loại</p>
+                            </div>
+                            <div class="col-10">
+                                <p>
+                                    Cổ Trang, Thần Thoại, Hài Hước
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Năm sản xuất</p>
+                            </div>
+                            <div class="col-10">
+                                <p th:text="${movie.releaseYear}">2021</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Đạo diễn</p>
+                            </div>
+                            <div class="col-10">
+                                <p>
+                                    Trần Gia Bội, Lý Tài
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Diễn viên</p>
+                            </div>
+                            <div class="col-10">
+                                <p>
+                                    Triệu Lộ Tư, Hạ Khai Lãng, Giai Nại Na, Dĩnh Nhi, Tào Phỉ Nhiên, Lý Quân Nhuệ,
+                                    Vương An Vũ
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Nội dung phim</p>
+                            </div>
+                            <div class="col-10">
+                                <p>
+                                    <th:block th:text="${movie.description}"></th:block>
+                                    <a class="text-primary" href="">Xem
+                                        thêm</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <th:block th:if="${movie.type.toString() == 'PHIM_BO' && episodes.size() > 0}">
+                        <a class="d-inline-block btn btn-danger px-5 py-2 mt-3 rounded"
+                           th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episodes.get(0).displayOrder})}">
+                            <span><i class="fa-solid fa-play"></i></span>
+                            Xem phim</a>
+                    </th:block>
+
+                    <th:block th:if="${(movie.type.toString() == 'PHIM_LE' || movie.type.toString() == 'PHIM_CHIEU_RAP') && episodes.size() > 0}">
+                        <a class="d-inline-block btn btn-danger px-5 py-2 mt-3 rounded"
+                           th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap='full')}">
+                            <span><i class="fa-solid fa-play"></i></span>
+                            Xem phim</a>
+                    </th:block>
+
+                </div>
+            </div>
+
+            <div class="mt-4" th:if="${movie.type.toString() == 'PHIM_BO' && episodes.size() > 0}">
+                <h3 class="mb-3">Tập phim</h3>
+                <a class="btn me-2"
+                   th:each="episode : ${episodes}"
+                   th:text="${episode.title}"
+                   th:classappend="${episode.displayOrder == currentEpisode.displayOrder} ? 'btn-danger disabled' : 'btn-dark'"
+                   th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episode.displayOrder})}">
+                    >Tập 1</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-4 bg-body-tertiary">
+        <div class="container">
+            <h3 class="mb-3">Phim đề xuất</h3>
+            <div class="row">
+                <div class="col-2" th:each="movie : ${relatedMovieList}">
+                    <th:block th:replace="~{web/fragments/movie :: movie-item(${movie})}"></th:block>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-4">
+        <div class="container">
+            <div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-3">Bình luận</h3>
+                    <button class="btn btn-primary" id="btn-open-modal-review">
+                        Viết đánh giá
+                    </button>
+                </div>
+                <p>Vui lòng <a href="/dang-nhap" class="text-primary text-decoration-underline">đăng
+                    nhập</a> để viết bình luận</p>
+                <div class="review-list">
+
+                </div>
+
+                <div id="review-pagination" class="d-flex justify-content-center"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalReview" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modal-review-title">Viết đánh giá</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-center mb-2" th:text="${movie.title}"></h6>
+                    <div class="mb-4">
+                        <div class="rating-container d-flex justify-content-center">
+                        <span class="star" data-rating="1">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                            <span class="star" data-rating="2">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                            <span class="star" data-rating="3">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                            <span class="star" data-rating="4">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                            <span class="star" data-rating="5">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                            <span class="star" data-rating="6">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                            <span class="star" data-rating="7">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                            <span class="star" data-rating="8">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                            <span class="star" data-rating="9">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                            <span class="star" data-rating="10">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        </div>
+                        <div class="text-center" id="rating-value"></div>
+                    </div>
+
+                    <form id="form-review">
+                        <div class="mb-3">
+                            <div class="form-group">
+                            <textarea class="form-control" id="review-content" rows="4"
+                                      placeholder="Chia sẻ cảm nghĩ của bạn về bộ phim ..." name="content"></textarea>
+                            </div>
+                        </div>
+                        <div class="mb-3 d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary" id="btn-handle">Hoàn tất</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block id="js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
+            integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"
+            integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.js"
+            integrity="sha512-GzbaI5EsNzdEUq6/2XLYpr1y9CUZRIVsUeWTAFgULtQa5jZ3Nug8i0nZKM6jp9NffBCZhymPPQFcF0DK+JkRpw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/web/js/main.js"></script>
+    <script th:inline="javascript">
+        const movie = [[${movie}]];
+        let reviewList = [[${reviewList}]];
+
+        console.log({movie, reviewList})
+    </script>
+    <script src="/js/movie-detail.js"></script>
+</th:block>
+</body>
+</html>

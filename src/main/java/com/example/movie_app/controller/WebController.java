@@ -1,16 +1,10 @@
 package com.example.movie_app.controller;
 
 
-import com.example.movie_app.entity.Blog;
-import com.example.movie_app.entity.Movie;
-import com.example.movie_app.entity.Review;
-import com.example.movie_app.entity.User;
+import com.example.movie_app.entity.*;
 import com.example.movie_app.model.enums.MovieType;
 
-import com.example.movie_app.service.BlogService;
-import com.example.movie_app.service.MovieService;
-import com.example.movie_app.service.ReviewService;
-import com.example.movie_app.service.UserService;
+import com.example.movie_app.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,12 +25,7 @@ public class WebController {
     private final BlogService blogService;
     private final ReviewService reviewService;
     private final HttpSession httpSession;
-
-
-
-
-
-
+    private final EpisodeService episodeService;
 
     //
     @GetMapping("/")
@@ -96,35 +85,33 @@ public class WebController {
     //     Chi tiết phim
     @GetMapping("/phim/{id}/{slug}")
     public String getChiTietPhim(@PathVariable Integer id, @PathVariable String slug, Model model) {
-        Movie movie = movieService.findMovieById(id);
+        Movie movie = movieService.getMovie(id, slug, true);
         List<Review> reviewList = reviewService.getReviewsByMovie(id);
 
-//        model.addAttribute("currentUser", httpSession.getAttribute("currentUser"));
-
-//        // Kiểm tra nếu không tìm thấy phim
-//        if (movie == null) {
-//            // Xử lý trường hợp không tìm thấy, có thể redirect hoặc hiển thị trang lỗi
-//            return "redirect:/error"; // hoặc "web/error-page"
-//        }
-//        String titleSlug = SlugUtils.createSlug(movie.getTitle());
-//
-//        // Kiểm tra xem slug từ movie.title có khớp với slug truyền vào hay không
-//        if (!slug.equals(titleSlug)) {
-//            // Xử lý trường hợp slug không khớp, có thể redirect hoặc hiển thị trang lỗi
-//            return "redirect:/error"; // hoặc "web/error-page"
-//        }
-
-        // Truyền thông tin phim đến view thông qua model
         model.addAttribute("movie", movie);
         model.addAttribute("blogs", blogService.findBlogByStatusOrderByPublishedAtDesc(true,1,3 ));
         model.addAttribute("moviesRelated", movieService.findMovieRelated(MovieType.valueOf(String.valueOf(movie.getType()))));
-
         List<Review> reviews = reviewService.getReviewsByMovie(id);
         model.addAttribute("reviews", reviews);
 
         return "web/chi-tiet-phim";
     }
+    // Xem phim
+    @GetMapping("/xem-phim/{id}/{slug}")
+    public String getXemPhimPage(Model model, @PathVariable Integer id, @PathVariable String slug, @RequestParam(required = false) String tap) {
+        Movie movie = movieService.getMovie(id, slug, true);
+        List<Movie> relatedMovieList = movieService.findMovieRelated(MovieType.valueOf(String.valueOf(movie.getType())));
+        List<Review> reviewList = reviewService.getReviewsByMovie(id);
+        List<Episode> episodes = episodeService.getEpisodeListOfMovie(id, true);
+        Episode currentEpisode = episodeService.getEpisode(id, tap, true);
 
+        model.addAttribute("movie", movie);
+        model.addAttribute("relatedMovieList", relatedMovieList);
+        model.addAttribute("reviewList", reviewList);
+        model.addAttribute("episodes", episodes);
+        model.addAttribute("currentEpisode", currentEpisode);
+        return "web/xem-phim";
+    }
 
     @GetMapping("/danh-sach-blog")
     public String getListBlog(Model model ,
@@ -140,8 +127,6 @@ public class WebController {
     @GetMapping("/blog/{id}/{slug}")
     public String getDetailBlog(@PathVariable Integer id, @PathVariable String slug, Model model) {
         Blog blog = blogService.findBlogByIdAndSlug(id, slug, true);
-
-
         model.addAttribute("blog", blog);
         model.addAttribute("blogs", blogService.findBlogByStatusOrderByPublishedAtDesc(true,1,3 ));
         model.addAttribute("moviesHot", movieService.getHotMovies(true, 1,6));
@@ -165,6 +150,4 @@ public class WebController {
         }
         return "web/auth/dang-nhap";
     }
-
-
 }

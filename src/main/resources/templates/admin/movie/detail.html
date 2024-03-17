@@ -296,17 +296,20 @@
                             </div>
 
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" id="modal-update-episode">
                             <video width="100%" controls>
                                 <source src="" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end">
-                        <button class="btn btn-warning" id="btn-chose-video" >
-                            Chọn video</button>
-                    <button class="btn btn-success" id="btn-save-video">Lưu</button>
+                    <div class="d-flex justify-content-end ">
+                        <div><label for="btn-chose-video" class="btn btn-warning">Chọn video</label>
+                            <input type="file" id="btn-chose-video" style="display: none;"></div>
+
+                        <div>
+                            <button class="btn btn-success ms-2" id="btn-save-video">Lưu</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -694,11 +697,9 @@
         const previewVideo = (episodeId) => {
             // Tìm kiếm tập phim theo id
             const episode = episodeList.find(e => e.id === episodeId)
-
             // Lấy ra thẻ video và gán src cho nó
             const videoEl = document.querySelector('#modal-preview-video video')
             videoEl.src = episode.videoUrl
-
             // Hiển thị modal
             $('#modal-preview-video').modal('show')
 
@@ -707,51 +708,97 @@
         const updateDisplayOrderEpisode = document.getElementById('update-displayOrder')
         const updateStatusEpisode = document.getElementById('update-status-episode')
         const saveEpisodeUpdate = document.getElementById('btn-save-video')
+        // const choseEpisodeUpdate = document.getElementById('btn-chose-video')
         let idEps = null;
+
         const updateEpisode = (episodeId) => {
             // Tìm kiếm tập phim theo id
             const episode = episodeList.find(e => e.id === episodeId);
-            console.log(episode);
-            updateTitleEpisode.value = episode[0].title;
-            updateStatusEpisode.value = episode[0].status;
-            updateDisplayOrderEpisode.value= episode[0].displayOrder;
+
+            const videoEl = document.querySelector('#modal-update-episode video')
+            videoEl.src = episode.videoUrl
+            updateTitleEpisode.value = episode.title;
+            updateStatusEpisode.value = episode.status;
+            updateDisplayOrderEpisode.value= episode.displayOrder;
             idEps=episodeId;
+            let newVideoUrl = '';
 
             // Hiển thị modal
             $('#update-episode').modal('show');
-        }
-        saveEpisodeUpdate.addEventListener('click' ,(e) =>{
-            e.preventDefault();
-            if (!$('#form-create-episode').valid()) return;
-            let status = false;
-            if (saveEpisodeUpdate.getAttribute("value")==="true"){
-                status=true;
-            }
-            const data = {
-                movie : movie,
-                title: updateTitleEpisode.value,
-                status : updateStatusEpisode.value,
-                displayOder : updateDisplayOrderEpisode.value
-            }
-            console.log(data);
-            axios.put(`/api/admin/episodes/${idEps}`, data)
-                .then(res => {
-                    toastr.success('Thêm mới thành công.')
-                    setTimeout(()=>{
-                        window.location.reload()
-                    },1500)
-                })
-                .catch(err => {
-                    console.log(err)
-                    toastr.error(err.response.data.message)
+
+            const choseEpisodeUpdate = document.getElementById('btn-chose-video');
+            console.log(choseEpisodeUpdate);
+
+            choseEpisodeUpdate.addEventListener ('change', (event) => {
+                // Lấy ra file vừa được chọn
+                const file = event.target.files[0]
+
+                // Tạo đối tượng form data để đưa dữ liệu vào gửi đi
+                const formData = new FormData()
+                formData.append('file', file)
+
+                // Gọi api sử dung axios
+                axios.post(`/api/admin/episodes/${episodeId}/upload-video`, formData)
+                    .then(res => {
+                        newVideoUrl = res.data.videoUrl;
+                        videoEl.src = newVideoUrl;
+
+                        // Sử dụng sự kiện 'canplaythrough' để đảm bảo rằng video đã được tải xuống hoàn toàn
+                        videoEl.addEventListener('canplaythrough', function() {
+                            // Tải lại trạng thái của video sau khi đã cập nhật src
+                            videoEl.play(); // Phát video
+                            toastr.success('Upload video thành công.')
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        toastr.error(err.response.data.message)
+                    });
+
+                console.log(newVideoUrl);
+
+                saveEpisodeUpdate.addEventListener('click' ,(e) =>{
+                    e.preventDefault();
+                    if (!$('#form-create-episode').valid()) return;
+                    let status = false;
+                    if (saveEpisodeUpdate.getAttribute("value")==="true"){
+                        status=true;
+                    }
+                    const data = {
+                        movie : movie,
+                        title: updateTitleEpisode.value,
+                        status : updateStatusEpisode.value,
+                        displayOder : updateDisplayOrderEpisode.value,
+                        videoUrl: newVideoUrl
+                    }
+                    console.log(data);
+
+                    axios.put(`/api/admin/episodes/${idEps}`, data)
+                        .then(res => {
+                            toastr.success('Cập nhật tạp phim thành công.')
+                            setTimeout(()=>{
+                                window.location.reload()
+                            },1500)
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            toastr.error(err.response.data.message)
+                        })
+
                 })
 
-        })
+            });
+        }
+
+
+
         // Nếu đóng modal preview video thì reset lại src của video
         $('#modal-preview-video').on('hidden.bs.modal', function (event) {
             const videoEl = document.querySelector('#modal-preview-video video')
             videoEl.src = "";
         })
+
+
 
         // Upload video cho tập phim
         const uploadVideo = (event, episodeId) => {

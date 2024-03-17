@@ -31,12 +31,12 @@
                     <form id="form-login">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email">
+                            <input type="email" class="form-control" id="email" name="email">
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
                             <div class="input-group">
-                                <input type="password" class="form-control" id="password">
+                                <input type="password" class="form-control" id="password" name="password">
                                 <button type="button" class="btn btn-outline-secondary" id="showPassword">
                                     <i class="bi bi-eye"></i>
                                 </button>
@@ -89,6 +89,9 @@
 
     formLogin.addEventListener("submit", (e) => {
         // Check validate
+        if (!$('#form-login').valid()) {
+            return;
+        }
 
         e.preventDefault();
 
@@ -96,7 +99,6 @@
             email: emailEl.value,
             password: passwordEl.value
         }
-        console.log(data)
 
         // Send data to server using axios
         axios.post('/api/auth/login', data)
@@ -116,20 +118,20 @@
     })
     $('#form-login').validate({
         rules: {
-            contentEmail: {
+            email: {
                 required: true,
                 email: true,
             },
-            contentPassword: {
+            password: {
                 required: true,
             },
         },
         messages: {
-            contentEmail: {
+            email: {
                 required: "Vui lòng nhập email",
                 email: "Email không đúng định dạng"
             },
-            contentPassword: {
+            password: {
                 required: "Vui lòng nhập mật khẩu",
             },
         },

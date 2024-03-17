@@ -1,122 +1,297 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org"
-      th:replace="~{admin/layout/layout :: layout(~{:: title}, ~{}, ~{:: .content-wrapper}, ~{:: #js})}">
-
+<!doctype html>
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/layout :: layout(~{::title},~{::#css},~{::#main-content},~{::#js})}">
 <head>
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <title>Admin Movie Index</title>
+    <th:block id="css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+              integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+              crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css" />
+        <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
+    </th:block>
 </head>
-<th:block id="css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css"/>
-    <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css"/>
-    <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
-          integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.css"
-          integrity="sha512-K1k7jSn9RDKEcn/ugqVVvWYu0bcS3q1w6m/5pQSnrj0bCfIqF6Wk49lkmckSb4wglvTP9V17LtS0q0XxYccXbg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-</th:block>
-
 <body>
-<!-- BODY -->
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-12">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="/admin/dashboard">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            Danh sách thể loại
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <table id="table-director" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th style="width: 5%">STT</th>
-                                    <th style="width: 60%">Thể loại</th>
-                                    <th style="width: 35%">Tùy chỉnh</th>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="genre : ${genres}">
-                                    <td th:text="${genre.id}">#</td>
-                                    <td th:text="${genre.name}">Tên thể loại</td>
-                                    <td>
-                                        <button class="btn btn-success btn-sm"
-                                                th:onclick="|updateEpisode(${genre.id})|"><i
-                                                class="fas fa-pencil-alt"></i>
-                                        </button>
-                                        <button class="btn btn-danger btn-sm"
-                                                th:onclick="|deleteGenre(${genre.id})|">
-                                            <i class="fas fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" id="main-content">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/admin/dashboard">Dashboard</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                Danh sách Thể loại phim
+                            </li>
+                        </ol>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-</div>
 
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row py-2">
+                    <div class="col-12">
+                        <button id="btn-create-genre"  type="button" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Tạo thể loại mới
+                        </button>
+                        <a href="#" type="button" class="btn btn-info">
+                            <i class="fas fa-redo"></i> Refresh
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table table-bordered table-hover" id="genre-table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 10%">STT</th>
+                                        <th style="width: 55%">Tên Loại Phim</th>
+                                        <th style="width: 35%">Tùy chỉnh</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="genre, iterStat : ${genres}">
+                                        <td th:text="${iterStat.count}">1</td>
+                                        <td th:text="${genre.name}"></td>
+                                        <td>
+                                            <button type="button"
+                                                    th:value="${genre.id}"
+                                                    th:onclick="|uploadGenre(${genre.id})|"
+                                                    class="btn btn-success btn-sm mx-4">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </button>
+                                            <button th:onclick="|deleteGenre(${genre.id})|"
+                                                    type="button"
+                                                    th:value="${genre.id}"  class="btn btn-danger btn-sm mx-4">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="modal fade" id="modal-genre">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 id="modal-title" class="modal-title"></h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <form id="genre">
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label>Tên thể loại</label>
+                                                        <input name="nameGenre" type="text" class="form-control" id="nameGenre"/>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button id="save-genre" type="button" class="btn btn-primary">Lưu</button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
 <th:block id="js">
     <script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
     <script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
             integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.js"
-            integrity="sha512-GzbaI5EsNzdEUq6/2XLYpr1y9CUZRIVsUeWTAFgULtQa5jZ3Nug8i0nZKM6jp9NffBCZhymPPQFcF0DK+JkRpw=="
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
+            integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        const genre = [[${genres}]];
-        console.log(genre);
+    <<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"
+             integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A=="
+             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/admin-assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script >
+        $(".select2").select2();
 
-        function deleteGenre(id) {
-            const isConfirm = confirm('Bạn có chắc chắn muốn xóa phim này?');
+        $('#genre-table').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": false,
+            "pageLength": 5,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "order": []
+        });
 
-            if (!isConfirm) {
+    </script>
+    <script th:inline="javascript">
+        let genreList = [[${genres}]];
+        const btnCreateGenre =document.getElementById("btn-create-genre");
+
+        let titleModal = document.getElementById("modal-title");
+        let nameGenre = document.getElementById("nameGenre");
+        let btnSaveGenre = document.getElementById("save-genre");
+        let idGenre = null;
+
+        $('#modal-genre').validate({
+            rules: {
+                nameGenre: {
+                    required: true
+                }
+            },
+            messages: {
+                nameGenre: {
+                    required: "Tên thể loại không được để trống"
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+
+
+        btnSaveGenre.addEventListener('click',()=>{
+            if (!$('#modal-genre').valid()) {
                 return;
             }
 
-            axios.delete(`/api/admin/episodes/${id}`)
-                .then(function (response) {
-                    toastr.success('Xóa phim thành công');
-                    setTimeout(function () {
-                        location.reload()
-                    }, 1500);
+            if (idGenre==null){
+                functionCreateGenre();
+            }else {
+                functionUpdateGenre(idGenre)
+            }
+        })
+
+        const uploadGenre = (id)=>{
+            idGenre = id;
+            const currentGenre = genreList.find(gen => gen.id===idGenre);
+            nameGenre.value= currentGenre.name;
+            $('#modal-genre').modal('show')
+            titleModal.textContent="Chỉnh sửa thể loại";
+        }
+        const deleteGenre = (id)=>{
+            let isConfirm  = confirm("Bạn có chắc muốn xóa thể loại này không")
+            if (!isConfirm)return;
+            axios.delete(`/api/admin/genres/${id}`)
+                .then((res)=>{
+                    toastr.success("Xóa thành công ");
+                    setTimeout(()=>{
+                        window.location.reload()
+                    },1500)
                 })
-                .catch(function (error) {
-                    console.log(error);
-                    toastr.error(error.response.data.message);
-                });
+                .catch((er)=>{
+                    console.log(er)
+                    toastr.error("Xóa thất bại");
+                })
         }
 
+        btnCreateGenre.addEventListener('click' ,() =>{
+            $('#modal-genre').modal('show')
+            titleModal.textContent="Tạo thể loại mới";
+            nameGenre.value='';
+        } )
 
+
+        const functionCreateGenre = ()=>{
+            if (!$('#modal-genre').valid()) {
+                return;
+            }
+            let isConf = true;
+            genreList.forEach(gen =>{
+                if (gen.name===nameGenre.value){
+                    toastr.error("Thể loại đã tồn tại  ");
+                    isConf=false;
+                }
+            })
+            if (!isConf){
+                return;
+            }
+            const data={
+                name:nameGenre.value
+            }
+            axios.post("/api/admin/genres",data)
+                .then(()=>{
+                    toastr.success("Lưu thành công ");
+
+                    setTimeout(()=>{
+                        window.location.reload()
+                    },1500)
+                })
+                .catch(()=>{
+                    toastr.error("Tạo mới không thành công");
+                    $('#modal-genre').modal('hidden')
+                })
+        }
+        const  functionUpdateGenre = (id)=>{
+            if (!$('#modal-genre').valid()) {
+                return;
+            }
+            let isConf = true;
+            genreList.forEach(gen =>{
+                if (gen.name===nameGenre.value){
+                    toastr.error("Thể loại đã tồn tại  ");
+                    isConf=false;
+                }
+            })
+            if (!isConf){
+                return;
+            }
+            const data={
+                name:nameGenre.value
+            }
+            axios.put(`/api/admin/genres/${id}`,data)
+                .then(()=>{
+                    toastr.success("Lưu thành công ");
+
+                    setTimeout(()=>{
+                        window.location.reload()
+                    },1500)
+                })
+                .catch(()=>{
+                    toastr.error("Update thât bại");
+                    $('#modal-genre').modal('hidden')
+                })
+        }
     </script>
-
 </th:block>
 </body>
 
+</body>
 </html>

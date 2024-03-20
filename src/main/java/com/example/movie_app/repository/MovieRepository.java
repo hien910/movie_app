@@ -87,4 +87,5 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
     List<Movie> findByTypeAndStatusAndRatingGreaterThanEqualAndIdNotOrderByRatingDescViewDescPublishedAtDesc(MovieType type, Boolean status, Double rating, Integer id);
 
+    List<Movie> findMovieByStatus(boolean b);
 }

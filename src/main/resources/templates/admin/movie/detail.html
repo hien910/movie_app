@@ -7,7 +7,7 @@
 
     <th:block id="css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css"/>
         <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css"/>
         <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
@@ -208,10 +208,12 @@
                                                     <h4 class="mb-3">Danh sách tập phim</h4>
                                                 </div>
                                                 <div>
-                                                    <button id="create-episode" class="rounded overflow-hidden "
-                                                            type="button" th:if="${movie.getType().value =='Phim bộ'|| episodes.size()==0}"
+                                                    <button id="create-episode" class="rounded overflow-hidden btn-primary"
+                                                            type="button"
+                                                            th:if="${movie.getType().value =='Phim bộ'|| episodes.size()==0}"
                                                             th:onclick="|createEpisode()|">
-                                                        <span class><i class="fa-solid fa-plus"></i> Thêm Tập phim</span>
+                                                        <span class><i
+                                                                class="fa-solid fa-plus"></i> Thêm Tập phim</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -219,35 +221,41 @@
                                             <table id="table-director" class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th style="width: 5%">#</th>
+                                                    <th style="width: 5%">STT</th>
                                                     <th style="width: 20%">Tên tập phim</th>
                                                     <th style="width: 40%">Link</th>
                                                     <th style="width: 10%">Thời lượng</th>
                                                     <th style="width: 10%">Trạng thái</th>
-                                                    <th style="width: 15%"></th>
+                                                    <th style="width: 15%">Tùy chỉnh</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr th:each="episode : ${episodes}">
-                                                    <td th:text="${episode.displayOrder}">#</td>
+                                                    <td th:text="${episode.displayOrder}">STT</td>
                                                     <td th:text="${episode.title}">Tên tập phim</td>
                                                     <td th:text="${episode.videoUrl}">Link</td>
                                                     <td th:text="${episode.duration}">Thời lượng</td>
-                                                    <td th:text="${episode.status ? 'Công khai' : 'Nháp'}">Trạng thái</td>
+                                                    <td th:text="${episode.status ? 'Công khai' : 'Nháp'}">Trạng thái
+                                                    </td>
                                                     <td>
                                                         <label th:for="|episode-input-${episode.id}|"
                                                                class="btn btn-primary btn-sm mb-0"><i
                                                                 class="fas fa-upload"></i></label>
-                                                        <input type="file" class="d-none" th:id="|episode-input-${episode.id}|"
+                                                        <input type="file" class="d-none"
+                                                               th:id="|episode-input-${episode.id}|"
                                                                th:onchange="|uploadVideo(event, ${episode.id})|">
 
                                                         <button class="btn btn-warning btn-sm text-white"
                                                                 th:onclick="|previewVideo(${episode.id})|">
                                                             <i class="fas fa-play"></i>
                                                         </button>
-                                                        <button class="btn btn-success btn-sm" th:onclick="|updateEpisode(${episode.id})|"><i class="fas fa-pencil-alt"></i>
+                                                        <button class="btn btn-success btn-sm"
+                                                                th:onclick="|updateEpisode(${episode.id})|"><i
+                                                                class="fas fa-pencil-alt"></i>
                                                         </button>
-                                                        <button class="btn btn-danger btn-sm" th:onclick="|deleteEpisode(${episode.id})|"><i class="fas fa-trash-alt"></i></button>
+                                                        <button class="btn btn-danger btn-sm"
+                                                                th:onclick="|deleteEpisode(${episode.id})|"><i
+                                                                class="fas fa-trash-alt"></i></button>
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -306,7 +314,6 @@
                     <div class="d-flex justify-content-end ">
                         <div><label for="btn-chose-video" class="btn btn-warning">Chọn video</label>
                             <input type="file" id="btn-chose-video" style="display: none;"></div>
-
                         <div>
                             <button class="btn btn-success ms-2" id="btn-save-video">Lưu</button>
                         </div>
@@ -356,7 +363,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tạo tập phim mới</h4>
+                    <h4 class="modal-title ">Tạo tập phim mới</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -492,7 +499,7 @@
                 },
                 type: {
                     required: "Loại phim không được để trống"
-                },type: {
+                }, type: {
                     required: "Poster không được để trống"
                 }
 
@@ -517,7 +524,6 @@
         const typeEl = document.getElementById('type');
         const releaseYearEl = document.getElementById('releaseYear');
         const imagePreviewEl = document.getElementById('image-preview');
-
 
 
         const btnUpdate = document.getElementById('btn-update');
@@ -677,13 +683,13 @@
                     toastr.error(err.response.data.message);
                 })
         });
-        const  renderPagination = (images) =>{
+        const renderPagination = (images) => {
             $('#image-pagination').pagination({
-                dataSource:images,
+                dataSource: images,
                 pageSize: 12,
                 pageRange: null,
                 showPageNumbers: true,
-                callback: function(data, pagination) {
+                callback: function (data, pagination) {
                     // template method of yourself
                     renderImages(data);
                 }
@@ -719,85 +725,47 @@
             videoEl.src = episode.videoUrl
             updateTitleEpisode.value = episode.title;
             updateStatusEpisode.value = episode.status;
-            updateDisplayOrderEpisode.value= episode.displayOrder;
-            idEps=episodeId;
-            let newVideoUrl = '';
+            updateDisplayOrderEpisode.value = episode.displayOrder;
+            idEps = episodeId;
 
             // Hiển thị modal
             $('#update-episode').modal('show');
 
-            const choseEpisodeUpdate = document.getElementById('btn-chose-video');
-            console.log(choseEpisodeUpdate);
+            saveEpisodeUpdate.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!$('#form-create-episode').valid()) return;
+                let status = false;
+                if (saveEpisodeUpdate.getAttribute("value") === "true") {
+                    status = true;
+                }
+                const data = {
+                    movie: movie,
+                    title: updateTitleEpisode.value,
+                    status: updateStatusEpisode.value,
+                    displayOrder: updateDisplayOrderEpisode.value,
+                }
+                console.log(data);
 
-            choseEpisodeUpdate.addEventListener ('change', (event) => {
-                // Lấy ra file vừa được chọn
-                const file = event.target.files[0]
-
-                // Tạo đối tượng form data để đưa dữ liệu vào gửi đi
-                const formData = new FormData()
-                formData.append('file', file)
-
-                // Gọi api sử dung axios
-                axios.post(`/api/admin/episodes/${episodeId}/upload-video`, formData)
+                axios.put(`/api/admin/episodes/${idEps}`, data)
                     .then(res => {
-                        newVideoUrl = res.data.videoUrl;
-                        videoEl.src = newVideoUrl;
-
-                        // Sử dụng sự kiện 'canplaythrough' để đảm bảo rằng video đã được tải xuống hoàn toàn
-                        videoEl.addEventListener('canplaythrough', function() {
-                            // Tải lại trạng thái của video sau khi đã cập nhật src
-                            videoEl.play(); // Phát video
-                            toastr.success('Upload video thành công.')
-                        });
+                        toastr.success('Cập nhật tạp phim thành công.')
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 1500)
                     })
                     .catch(err => {
                         console.log(err)
                         toastr.error(err.response.data.message)
-                    });
+                    })
 
-                console.log(newVideoUrl);
-
-                saveEpisodeUpdate.addEventListener('click' ,(e) =>{
-                    e.preventDefault();
-                    if (!$('#form-create-episode').valid()) return;
-                    let status = false;
-                    if (saveEpisodeUpdate.getAttribute("value")==="true"){
-                        status=true;
-                    }
-                    const data = {
-                        movie : movie,
-                        title: updateTitleEpisode.value,
-                        status : updateStatusEpisode.value,
-                        displayOder : updateDisplayOrderEpisode.value,
-                        videoUrl: newVideoUrl
-                    }
-                    console.log(data);
-
-                    axios.put(`/api/admin/episodes/${idEps}`, data)
-                        .then(res => {
-                            toastr.success('Cập nhật tạp phim thành công.')
-                            setTimeout(()=>{
-                                window.location.reload()
-                            },1500)
-                        })
-                        .catch(err => {
-                            console.log(err)
-                            toastr.error(err.response.data.message)
-                        })
-
-                })
-
-            });
+            })
         }
-
-
 
         // Nếu đóng modal preview video thì reset lại src của video
         $('#modal-preview-video').on('hidden.bs.modal', function (event) {
             const videoEl = document.querySelector('#modal-preview-video video')
             videoEl.src = "";
         })
-
 
 
         // Upload video cho tập phim
@@ -824,32 +792,32 @@
                     toastr.error(err.response.data.message)
                 })
         }
-        const createEpisode = ()=>{
+        const createEpisode = () => {
             $('#modal-create-episode').modal('show');
         }
         const titleEpisode = document.getElementById("create-title-episode");
         const statusEpisode = document.getElementById("create-status-episode");
         const saveEpisode = document.getElementById('create-save-episode');
-        saveEpisode.addEventListener('click' ,(e) =>{
+        saveEpisode.addEventListener('click', (e) => {
             e.preventDefault();
             if (!$('#form-create-episode').valid()) return;
             let status = false;
-            if (statusEpisode.getAttribute("value")==="true"){
-                status=true;
+            if (statusEpisode.getAttribute("value") === "true") {
+                status = true;
             }
             const data = {
                 movie: movie,
                 title: titleEpisode.value,
-                status : status,
-                displayOrder : episodeList.length+1
+                status: status,
+                displayOrder: episodeList.length + 1
             }
             console.log(data);
             axios.post(`/api/admin/episodes`, data)
                 .then(res => {
                     toastr.success('Thêm mới thành công.')
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         window.location.reload()
-                    },1500)
+                    }, 1500)
                 })
                 .catch(err => {
                     console.log(err)

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
@@ -86,20 +87,32 @@ public class WebController {
     @GetMapping("/phim/{id}/{slug}")
     public String getChiTietPhim(@PathVariable Integer id, @PathVariable String slug, Model model) {
         Movie movie = movieService.getMovie(id, slug, true);
-        List<Review> reviewList = reviewService.getReviewsByMovie(id);
-
         model.addAttribute("movie", movie);
         model.addAttribute("blogs", blogService.findBlogByStatusOrderByPublishedAtDesc(true,1,3 ));
         model.addAttribute("moviesRelated", movieService.findMovieRelated(MovieType.valueOf(String.valueOf(movie.getType()))));
-        List<Review> reviews = reviewService.getReviewsByMovie(id);
-        model.addAttribute("reviews", reviews);
+
+
+        model.addAttribute("episodes", episodeService.getEpisodeOfMovie(id, true));
+
+        model.addAttribute("reviews", reviewService.getReviewsByMovie(id));
 
         return "web/chi-tiet-phim";
     }
     // Xem phim
     @GetMapping("/xem-phim/{id}/{slug}")
-    public String getXemPhimPage(Model model, @PathVariable Integer id, @PathVariable String slug, @RequestParam(required = false) String tap) {
-        Movie movie = movieService.getMovie(id, slug, true);
+    public String getXemPhimPage(Model model,
+                                 @PathVariable Integer id,
+                                 @PathVariable String slug,
+                                  @RequestParam String tap) {
+
+        Movie movie = movieService.getAllMovie().stream()
+                .filter(s-> Objects.equals(s.getId(), id))
+                .filter(sl-> slug.equals(sl.getSlug()))
+                .findFirst()
+                .orElse(null);
+
+
+
         List<Movie> relatedMovieList = movieService.findMovieRelated(MovieType.valueOf(String.valueOf(movie.getType())));
         List<Review> reviewList = reviewService.getReviewsByMovie(id);
         List<Episode> episodes = episodeService.getEpisodeListOfMovie(id, true);

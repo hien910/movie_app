@@ -50,9 +50,9 @@
                                 <p>Thể loại</p>
                             </div>
                             <div class="col-10">
-                                <p>
-                                    Cổ Trang, Thần Thoại, Hài Hước
-                                </p>
+                                <div class="property-movie w-100">
+                                    <span><th:block th:text="${movie.type.value}"></th:block></span>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -68,9 +68,11 @@
                                 <p>Đạo diễn</p>
                             </div>
                             <div class="col-10">
-                                <p>
-                                    Trần Gia Bội, Lý Tài
-                                </p>
+                                <div class="property-movie w-100">
+                                        <span th:each="director : ${movie.directors}"> <th:block
+                                                th:text="${director.getName()}"></th:block>,
+                                        </span>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -78,10 +80,11 @@
                                 <p>Diễn viên</p>
                             </div>
                             <div class="col-10">
-                                <p>
-                                    Triệu Lộ Tư, Hạ Khai Lãng, Giai Nại Na, Dĩnh Nhi, Tào Phỉ Nhiên, Lý Quân Nhuệ,
-                                    Vương An Vũ
-                                </p>
+                                <div class="property-movie w-100">
+                                        <span th:each="actor : ${movie.actors}"> <th:block
+                                                th:text="${actor.getName()}"></th:block>,</span>
+
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -91,17 +94,42 @@
                             <div class="col-10">
                                 <p>
                                     <th:block th:text="${movie.description}"></th:block>
-                                    <a class="text-primary" href="">Xem
-                                        thêm</a></p>
+                                    <a class="text-primary" href="">
+                                    </a></p>
                             </div>
                         </div>
                     </div>
+                    <br>
+                    <div class="d-flex justify-content-between">
+                        <div class="play-movie pt-2 d-flex align-item-center">
+                            <th:block th:if="${movie.type.value == 'Phim bộ' && episodes.size() > 0}">
+                                <a class="d-inline-block btn btn-danger px-5 py-2 mt-3 rounded"
+                                   th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episodes.get(0).displayOrder})}">
+                                    <i class="fa-solid fa-play ml-2"></i>
+                                    <span class="btn-danger">Xem Phim</span>
+                                </a>
+                            </th:block>
+                            <th:block
+                                    th:if="${(movie.type.value == 'Phim lẻ'||movie.type.value == 'Phim chiếu rạp') && episodes.size() > 0}">
+                                <a class="d-inline-block btn btn-danger px-5 py-2 mt-3 rounded"
+                                   th:href="@{/xem-phim/{id}/{slug} (id=${movie.id},slug=${movie.slug},tap='Full')}">
+                                    <i class="fa-solid fa-play ml-2"></i>
+                                    <span>Xem Phim</span>
+                                </a>
+                            </th:block>
+                        </div>
 
-                    <a class="d-inline-block btn btn-danger px-5 py-2 mt-3 rounded"
-                       th:href="@{/xem-phim/${movie.id}/${movie.slug}}">
-                        <span><i class="fa-solid fa-play"></i></span>
-                        Xem phim</a>
+                    </div>
                 </div>
+            </div>
+            <div class="mt-4" th:if="${movie.type.toString() == 'PHIM_BO' && episodes.size() > 0}">
+                <h3 class="mb-2">Tập phim</h3>
+                <br>
+                <a class="btn me-2 btn btn-danger"
+                   th:each="episode : ${episodes}"
+                   th:text="${episode.title}"
+                   th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episode.displayOrder})}">
+                    >Tập 1</a>
             </div>
 
 

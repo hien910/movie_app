@@ -50,26 +50,19 @@ public class EpisodeService {
     }
 
     public Episode getEpisode(Integer movieId, String tap, boolean episodeStatus) {
-        if(tap.equals("full")) {
+        if(tap.equals("Full")) {
             return episodeRepository.findByMovie_IdAndDisplayOrderAndStatus(movieId, 1, episodeStatus).orElse(null);
         } else {
             return episodeRepository.findByMovie_IdAndDisplayOrderAndStatus(movieId, Integer.parseInt(tap), episodeStatus).orElse(null);
         }
     }
 
-    public void updateVideo(Integer id, MultipartFile file, UpsertEpisodeRequest request ) {
-        log.info("Uploading video for episode with id = {}", id);
-        log.info("File name: {}", file.getOriginalFilename());
+    public void updateVideo(Integer id, UpsertEpisodeRequest request ) {
 
         // Kiểm tra tập phim có tồn tại không
         Episode episode = episodeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy tập phim có id = " + id));
 
-        // Upload video
-        Video video = videoService.uploadVideo(file);
-
-        episode.setVideoUrl(video.getUrl());
-        episode.setDuration(video.getDuration());
         episode.setTitle(request.getTitle());
         episode.setDisplayOrder(request.getDisplayOrder());
         episode.setStatus(request.getStatus());
@@ -94,8 +87,11 @@ public class EpisodeService {
                 .displayOrder(request.getDisplayOrder())
                 .duration(1000)
                 .build();
-
         return episodeRepository.save(episode);
+    }
+
+    public List<Episode> getEpisodeOfMovie(Integer id,Boolean status){
+        return episodeRepository.findByMovie_IdAndStatusOrderByDisplayOrderAsc(id,status);
     }
 }
 

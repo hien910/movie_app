@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -146,5 +147,9 @@ public class MovieService   {
         List<Review> reviewList = reviewRepository.findReviewByMovie_Id(id);
         reviewRepository.deleteAll(reviewList);
         movieRepository.delete(movie);
+    }
+
+    public List<Movie> getAllMovie(){
+        return movieRepository.findMovieByStatus(true);
     }
 }

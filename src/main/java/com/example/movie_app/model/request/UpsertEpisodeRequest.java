@@ -17,8 +17,5 @@ public class UpsertEpisodeRequest {
     String title;
     Integer displayOrder;
     Boolean status;
-    Date createdAt;
-    Date updatedAt;
-    Date publishedAt;
     Movie movie;
 }

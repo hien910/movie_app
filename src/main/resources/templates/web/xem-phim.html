@@ -32,7 +32,7 @@
             </nav>
 
             <div id="#screen">
-                <video width="100%" controls>
+                <video width=1280px height=720px  controls>
                     <source th:src="${currentEpisode.videoUrl}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
@@ -51,9 +51,9 @@
                                 <p>Thể loại</p>
                             </div>
                             <div class="col-10">
-                                <p>
-                                    Cổ Trang, Thần Thoại, Hài Hước
-                                </p>
+                                <div class="property-movie w-100">
+                                    <span><th:block th:text="${movie.type.value}"></th:block></span>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -69,9 +69,11 @@
                                 <p>Đạo diễn</p>
                             </div>
                             <div class="col-10">
-                                <p>
-                                    Trần Gia Bội, Lý Tài
-                                </p>
+                                <div class="property-movie w-100">
+                                        <span th:each="director : ${movie.directors}"> <th:block
+                                                th:text="${director.getName()}"></th:block>,
+                                        </span>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -79,10 +81,11 @@
                                 <p>Diễn viên</p>
                             </div>
                             <div class="col-10">
-                                <p>
-                                    Triệu Lộ Tư, Hạ Khai Lãng, Giai Nại Na, Dĩnh Nhi, Tào Phỉ Nhiên, Lý Quân Nhuệ,
-                                    Vương An Vũ
-                                </p>
+                                <div class="property-movie w-100">
+                                        <span th:each="actor : ${movie.actors}"> <th:block
+                                                th:text="${actor.getName()}"></th:block>,</span>
+
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -92,8 +95,8 @@
                             <div class="col-10">
                                 <p>
                                     <th:block th:text="${movie.description}"></th:block>
-                                    <a class="text-primary" href="">Xem
-                                        thêm</a></p>
+                                    <a class="text-primary" href="">
+                                        </a></p>
                             </div>
                         </div>
                     </div>
@@ -116,7 +119,7 @@
             </div>
 
             <div class="mt-4" th:if="${movie.type.toString() == 'PHIM_BO' && episodes.size() > 0}">
-                <h3 class="mb-3">Tập phim</h3>
+                <h3 class="mb-3 ">Tập phim</h3>
                 <a class="btn me-2"
                    th:each="episode : ${episodes}"
                    th:text="${episode.title}"
@@ -131,7 +134,7 @@
         <div class="container">
             <h3 class="mb-3">Phim đề xuất</h3>
             <div class="row">
-                <div class="col-2" th:each="movie : ${relatedMovieList}">
+                <div class="col-2" th:each="movie, iterStat : ${relatedMovieList}" th:if="${ iterStat.index < 12 }">
                     <th:block th:replace="~{web/fragments/movie :: movie-item(${movie})}"></th:block>
                 </div>
             </div>
@@ -143,16 +146,17 @@
             <div>
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="mb-3">Bình luận</h3>
-                    <button class="btn btn-primary" id="btn-open-modal-review">
-                        Viết đánh giá
-                    </button>
+                    <div th:class="${session.currentUser == null ? 'd-none' :'d-inline-block'}">
+                        <button class="btn btn-primary" id="btn-open-modal-review">
+                            Viết đánh giá
+                        </button>
+                    </div>
                 </div>
-                <p>Vui lòng <a href="/dang-nhap" class="text-primary text-decoration-underline">đăng
+                <p th:if="${session.currentUser == null}">Vui lòng <a href="/dang-nhap"
+                                                                      class="text-primary text-decoration-underline">đăng
                     nhập</a> để viết bình luận</p>
                 <div class="review-list">
-
                 </div>
-
                 <div id="review-pagination" class="d-flex justify-content-center"></div>
             </div>
         </div>
@@ -233,6 +237,7 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/web/js/main.js"></script>
     <script th:inline="javascript">
+        const currentUser = [[${session.currentUser}]]
         const movie = [[${movie}]];
         let reviewList = [[${reviewList}]];
 

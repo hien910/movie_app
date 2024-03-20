@@ -28,8 +28,8 @@ public class EpisodeApi {
         return ResponseEntity.ok().build(); // status code 200
     }
     @PutMapping("/{id}")
-    public  ResponseEntity<?> updateVideo(@RequestParam("file") MultipartFile file, @PathVariable Integer id, @RequestBody UpsertEpisodeRequest request){
-        episodeService.updateVideo(id, file, request);
+    public  ResponseEntity<?> updateVideo( @PathVariable Integer id, @RequestBody UpsertEpisodeRequest request){
+        episodeService.updateVideo(id, request);
         return ResponseEntity.ok().build(); // status code 200
     }
 

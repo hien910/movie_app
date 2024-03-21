@@ -1,8 +1,19 @@
-- Trang Home
-![](img_md/home.png)
-- Trang Phim chiếu rạp
-![](img_md/phimCR.png)
-![](img_md/phimCR2.png)
+
+## Some features of the site:
+Home Page 1                   |                   Home page 2
+:---------------------------------:        |      :------------------------------:
+<img src="./img_md/trang-chu.png" height="250">  | <img src="./img_md/trang-chu2.png" height="250">
+
+Log in                    |                       Sign in
+:---------------------------------:        |      :------------------------------:
+<img src="./img_md/dang-nhap.png" height="250">  | <img src="./img_md/dang-ky.png" height="250">
+
+- Detail movie
+![](img_md/chi-tiet-phim1.png)
+
+List review                    |                      Create and update review 
+:---------------------------------:            |      :------------------------------:
+<img src="./img_md/chi-tiet-phim2.png" height="250">  | <img src="./img_md/chi-tiet-phim3.png" height="250">
 - Trang Phim bộ
 ![](img_md/phimBo.png)
 ![](img_md/phimBo2.png)

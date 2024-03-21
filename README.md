@@ -1,4 +1,4 @@
-# SOCIAL NETWORK
+# MOVIE APP
 
 ## Project Description:
 Build a movie website with many basic functions

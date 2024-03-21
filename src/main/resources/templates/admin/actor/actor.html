@@ -1,10 +1,506 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/layout :: layout(~{::title},~{::#css},~{::#main-content},~{::#js})}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Admin Movie Index</title>
+    <th:block id="css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+              integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+              crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.css"
+              integrity="sha512-K1k7jSn9RDKEcn/ugqVVvWYu0bcS3q1w6m/5pQSnrj0bCfIqF6Wk49lkmckSb4wglvTP9V17LtS0q0XxYccXbg=="
+              crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css"/>
+        <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
+        <style>
+            .modal-dialog {
+                max-width: 1000px;
+            }
+
+            .image-container {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-gap: 10px;
+            }
+
+            .image-item {
+                height: 150px;
+                border: 2px solid #eee;
+            }
+
+            .image-item.selected {
+                border-color: red !important;
+                border-width: 4px !important;
+            }
+
+            .image-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        </style>
+    </th:block>
 </head>
 <body>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" id="main-content">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/admin/dashboard">Dashboard</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                Danh sách diễn viên
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row py-2">
+                    <div class="col-12">
+                        <button id="btn-create-actor" type="button" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>Thêm diễn viên mới
+                        </button>
+                        <a href="#" type="button" class="btn btn-info">
+                            <i class="fas fa-redo"></i> Refresh
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table table-bordered table-hover" id="actor-table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 5%">STT</th>
+                                        <th style="width: 10%">Ảnh</th>
+                                        <th style="width: 20%">Tên diễn viên</th>
+                                        <th style="width: 50%">Mô tả</th>
+                                        <th style="width: 15%">Tùy chỉnh</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="actor, iterStat : ${actors}">
+                                        <td th:text="${iterStat.count}">1</td>
+                                        <td>
+                                            <img th:src="${actor.avatar}"
+                                                 style="border-radius: 50%; width: 50px; height: 50px;">
+                                        </td>
+                                        <td th:text="${actor.name}"></td>
+                                        <td th:text="${actor.description}"></td>
+
+                                        <td>
+                                                <button type="button"
+                                                        th:value="${actor.id}"
+                                                        th:onclick="|uploadActor(${actor.id})|"
+                                                        class="btn btn-success btn-sm mx-4">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </button>
+                                                <button th:onclick="|deleteActor(${actor.id})|"
+                                                        type="button"
+                                                        th:value="${actor.id}" class="btn btn-danger btn-sm mx-4">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+
+
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="modal fade" id="modal-actor">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 id="modal-title" class="modal-title"></h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <form id="actor">
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label>Tên diễn viên</label>
+                                                        <input name="name" type="text" class="form-control"
+                                                               id="name"/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Mô tả</label>
+                                                        <input name="description" type="text" class="form-control"
+                                                               id="description"/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="thumbnail-preview-container mb-3">
+                                                            <label>Hình ảnh</label>
+                                                            <img src="" alt="" id="thumbnail"/>
+                                                        </div>
+                                                        <button type="button" class="btn btn-info btn-flat"
+                                                                data-toggle="modal"
+                                                                data-target="#modal-image">
+                                                            Chọn hình ảnh
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Close
+                                                    </button>
+                                                    <button id="save-actor" type="button" class="btn btn-primary">Lưu
+                                                    </button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="modal fade" id="modal-image" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Danh sách ảnh</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <button class="btn btn-success" id="btn-chose-image" disabled>Chọn ảnh</button>
+
+                                <label for="avatar" class="btn btn-warning mb-0">Upload ảnh</label>
+                                <input type="file" id="avatar" class="d-none">
+                            </div>
+                            <div>
+                                <button class="btn btn-danger" id="btn-delete-image" disabled>Xóa ảnh</button>
+                            </div>
+                        </div>
+                        <!-- Hiển thị danh sách ảnh -->
+                        <div class="image-container mt-4 mb-4">
+                            <div class="image-item">
+                                <img src="https://images.unsplash.com/photo-1656918931725-2f9d9fce4acb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw4fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
+                                     alt="">
+                            </div>
+                        </div>
+
+                        <!-- Hiển thị phần phân trang -->
+                        <div class="pagination-container d-flex justify-content-center" id="image-pagination">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<th:block id="js">
+    <script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
+    <script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+            integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"
+            integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.js"
+            integrity="sha512-GzbaI5EsNzdEUq6/2XLYpr1y9CUZRIVsUeWTAFgULtQa5jZ3Nug8i0nZKM6jp9NffBCZhymPPQFcF0DK+JkRpw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/admin-assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script>
+        $(".select2").select2();
+
+        $('#actor-table').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": false,
+            "pageLength": 8,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "order": []
+        });
+
+    </script>
+    <script th:inline="javascript">
+        let actorList = [[${actors}]];
+        let imageList = [[${images}]];
+        const btnCreate = document.getElementById("btn-create-actor");
+
+        let titleModal = document.getElementById("modal-title");
+        let nameActor = document.getElementById("name");
+        let descriptionActor = document.getElementById("description")
+        let btnSave = document.getElementById("save-actor");
+        let idActor = null;
+        const thumbnailPreviewEl = document.getElementById('thumbnail');
+
+        $('#modal-actor').validate({
+            rules: {
+                name: {
+                    required: true
+                },
+                description: {
+                    required: true
+                }
+            },
+            messages: {
+                name: {
+                    required: "Tên diễn viên không được để trống"
+                },
+                description: {
+                    required: "Mô tả không được để trống"
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+
+
+        btnSave.addEventListener('click', () => {
+            if (idActor == null) {
+                functionCreateActor();
+            } else {
+                functionUpdateActor(idActor)
+            }
+        })
+
+        const uploadActor = (id) => {
+            idActor = id;
+            const currentActor = actorList.find(gen => gen.id === idActor);
+            nameActor.value = currentActor.name;
+            descriptionActor.value = currentActor.description;
+            thumbnailPreviewEl.src = currentActor.avatar;
+            $('#modal-actor').modal('show')
+            titleModal.textContent = "Chỉnh sửa diễn viên";
+        }
+        const deleteActor = (id) => {
+            let isConfirm = confirm("Bạn có chắc muốn xóa diễn viên này không")
+            if (!isConfirm) return;
+            axios.delete(`/api/admin/actors/${id}`)
+                .then((res) => {
+                    toastr.success("Xóa thành công ");
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1500)
+                })
+                .catch((er) => {
+                    console.log(er)
+                    toastr.error("Xóa thất bại");
+                })
+        }
+
+        btnCreate.addEventListener('click', () => {
+            $('#modal-actor').modal('show')
+            titleModal.textContent = "Thêm diễn viên mới";
+            nameActor.value = '';
+            descriptionActor.value = '';
+            thumbnailPreviewEl.src = '';
+        })
+
+
+        const functionCreateActor = () => {
+            // if (!$('#modal-actor').valid()) {
+            //     return;
+            // }
+            //
+            let isConf = true;
+            actorList.forEach(gen => {
+                if (gen.name === nameActor.value) {
+                    toastr.error("Diễn viên đã tồn tại ");
+                    isConf = false;
+                }
+            })
+            if (!isConf) {
+                return;
+            }
+            const data = {
+                name: nameActor.value,
+                description: descriptionActor.value,
+                avatar: thumbnailPreviewEl.src
+            }
+            console.log(data);
+            axios.post("/api/admin/actors", data)
+                .then(() => {
+                    toastr.success("Lưu thành công ");
+
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1500)
+                })
+                .catch(() => {
+                    toastr.error("Tạo mới không thành công");
+                    $('#modal-actor').modal('hidden')
+                })
+        }
+        const functionUpdateActor = (idActor) => {
+            // if (!$('#modal-actor').valid()) {
+            //     return;
+            // }
+            const data = {
+                name: nameActor.value,
+                description: descriptionActor.value,
+                avatar: thumbnailPreviewEl.src
+            }
+            console.log(data)
+            axios.put(`/api/admin/actors/${idActor}`, data)
+                .then(() => {
+                    toastr.success("Lưu thành công ");
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1500)
+                })
+                .catch(() => {
+                    toastr.error("Update thất bại");
+                    $('#modal-actor').modal('hidden')
+                })
+        }
+
+        // QUẢN LÝ ẢNH
+        const imageContainerEl = document.querySelector('.image-container');
+        const btnChoseImage = document.getElementById('btn-chose-image');
+        const btnDeleteImage = document.getElementById('btn-delete-image');
+        const inputImageEl = document.getElementById('avatar');
+
+
+        // Hiển thị danh sách ảnh
+        const renderImages = images => {
+            let html = "";
+            images.forEach(image => {
+                html += `
+                <div class="image-item" onclick="choseImage(this)" data-id="${image.id}">
+                    <img src="${image.url}" alt="">
+                </div>
+            `;
+            });
+            imageContainerEl.innerHTML = html;
+        }
+
+        // Upload ảnh
+        inputImageEl.addEventListener("change", (e) => {
+            // Lấy ra thông tin của file upload
+            const file = e.target.files[0];
+
+            // Tạo đối tượng formData
+            const formData = new FormData();
+            formData.append("file", file);
+
+            // Call api sử dụng axios
+            axios.post("/api/admin/images", formData)
+                .then(res => {
+                    imageList.unshift(res.data);
+                    renderPagination(imageList);
+                    toastr.success("Upload ảnh thành công");
+                })
+                .catch(err => {
+                    console.log(err);
+                    toastr.error(err.response.data.message);
+                })
+
+        })
+
+        // Chọn ảnh
+        const choseImage = el => {
+            const selectedEl = document.querySelector(".image-item.selected");
+            if (selectedEl) {
+                selectedEl.classList.remove("selected");
+            }
+
+            el.classList.add("selected");
+            btnChoseImage.disabled = false;
+            btnDeleteImage.disabled = false;
+        }
+
+        // Chọn ảnh
+        btnChoseImage.addEventListener("click", () => {
+            const selectedEl = document.querySelector(".image-item.selected");
+            if (!selectedEl) {
+                toastr.warning("Vui lòng chọn ảnh");
+                return;
+            }
+
+            const imageUrl = selectedEl.querySelector("img").getAttribute("src");
+            thumbnailPreviewEl.src = imageUrl;
+
+            $('#modal-image').modal('hide');
+        })
+
+        // Xóa ảnh
+        btnDeleteImage.addEventListener("click", () => {
+            const selectedEl = document.querySelector(".image-item.selected");
+            if (!selectedEl) {
+                toastr.warning("Vui lòng chọn ảnh cần xóa");
+                return;
+            }
+
+            const imageId = selectedEl.dataset.id;
+            axios.delete(`/api/admin/images/${imageId}`)
+                .then(res => {
+                    imageList = imageList.filter(image => image.id !== imageId);
+                    renderPagination(imageList);
+                    btnChoseImage.disabled = true;
+                    btnDeleteImage.disabled = true;
+
+                    toastr.success("Xoá ảnh thành công");
+                })
+                .catch(err => {
+                    console.log(err);
+                    toastr.error(err.response.data.message);
+                })
+        });
+        const renderPagination = (images) => {
+            $('#image-pagination').pagination({
+                dataSource: images,
+                pageSize: 12,
+                pageRange: null,
+                showPageNumbers: true,
+                callback: function (data, pagination) {
+                    // template method of yourself
+                    renderImages(data);
+                }
+            })
+        };
+
+        renderPagination(imageList);
+    </script>
+</th:block>
+</body>
 
 </body>
 </html>

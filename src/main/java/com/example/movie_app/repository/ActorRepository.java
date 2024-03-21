@@ -12,4 +12,8 @@ import java.util.List;
 public interface ActorRepository extends JpaRepository<Actor, Integer> {
 
     List<Actor> findAllByOrderByCreatedAtDesc();
+
+    Actor findByName(String name);
+
+    Actor findByNameAndIdNot(String name, Integer id);
 }

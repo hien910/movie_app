@@ -10,4 +10,8 @@ import java.util.List;
 @Repository
 public interface DirectorRepository extends JpaRepository<Director, Integer> {
     List<Director> findAllByOrderByCreatedAtDesc();
+
+    Director findByName(String name);
+
+    Director findByNameAndIdNot(String name, Integer id);
 }

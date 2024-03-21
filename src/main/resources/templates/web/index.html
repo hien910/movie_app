@@ -41,21 +41,9 @@
         </div>
 
         <div class="row">
-            <div class="col-2" th:each="movie : ${moviesPCR}">
+            <div class="col-2" th:each="movie,iterStat : ${moviesPCR}" th:if="${iterStat.count} &lt;= 12">
                 <th:block th:replace="~{web/fragments/movie :: movie-item(${movie})}"></th:block>
             </div>
-            <!--            <div class="col-2 " th:each="moviePCR, iterStat:${moviesPCR}" th:if="${iterStat.index < 6}">-->
-            <!--                <a th:href="@{/phim/{id}/{slug} (id=${moviePCR.id}, slug=${moviePCR.slug})}"-->
-            <!--                   class="movie-media" style="color: black ; text-decoration: none">-->
-            <!--                <div class="movie-item ">-->
-            <!--                    <div class="movie-poster rounded overflow-hidden ">-->
-            <!--                        <img th:src="${moviePCR.poster}" alt="" class="w-100 ">-->
-            <!--                    </div>-->
-            <!--                    <p class="mt-2" th:text="${moviePCR.title}">Chào Mừng Đến Samdalri</p>-->
-            <!--                    <p class="mt-2" th:text="${moviePCR.releaseYear}">2000</p>-->
-            <!--                </div></a>-->
-            <!--            </div>-->
-
         </div>
     </div>
 </section>
@@ -68,21 +56,9 @@
         </div>
 
         <div class="row">
-            <div class="col-2" th:each="movie : ${moviesPB}">
+            <div class="col-2" th:each="movie,iterStat : ${moviesPB}" th:if="${iterStat.count} &lt;= 12">
                 <th:block th:replace="~{web/fragments/movie :: movie-item(${movie})}"></th:block>
             </div>
-
-            <!--            <div class="col-2 " th:each="moviePB, iterStat:${moviesPB}" th:if="${iterStat.index < 6}">-->
-            <!--                <a th:href="@{/phim/{id}/{slug} (id=${moviePB.id}, slug=${moviePB.slug})}"-->
-            <!--                   class="movie-media" style="color: black ; text-decoration: none">-->
-            <!--                <div class="movie-item ">-->
-            <!--                    <div class="movie-poster rounded overflow-hidden ">-->
-            <!--                        <img th:src="${moviePB.poster}" alt="" class="w-100 ">-->
-            <!--                    </div>-->
-            <!--                    <p class="mt-2" th:text="${moviePB.title}">Chào Mừng Đến Samdalri</p>-->
-            <!--                    <p class="mt-2" th:text="${moviePB.releaseYear}">2000</p>-->
-            <!--                </div></a>-->
-            <!--            </div>-->
 
         </div>
     </div>
@@ -95,20 +71,9 @@
             <a href="/phim-le" class="text-primary text-decoration-none">Xem thêm</a>
         </div>
         <div class="row">
-            <div class="col-2" th:each="movie : ${moviesPL}">
+            <div class="col-2" th:each="movie, iterStat : ${moviesPL}" th:if="${iterStat.count} &lt;= 12">
                 <th:block th:replace="~{web/fragments/movie :: movie-item(${movie})}"></th:block>
             </div>
-            <!--            <div class="col-2 " th:each="moviePL, iterStat:${moviesPL}" th:if="${iterStat.index < 6}">-->
-            <!--                <a th:href="@{/phim/{id}/{slug} (id=${moviePL.id}, slug=${moviePL.slug})}"-->
-            <!--                   class="movie-media" style="color: black ; text-decoration: none">-->
-            <!--                <div class="movie-item ">-->
-            <!--                    <div class="movie-poster rounded overflow-hidden ">-->
-            <!--                        <img th:src="${moviePL.poster}" alt="" class="w-100 ">-->
-            <!--                    </div>-->
-            <!--                    <p class="mt-2" th:text="${moviePL.title}">Chào Mừng Đến Samdalri</p>-->
-            <!--                    <p class="mt-2" th:text="${moviePL.releaseYear}">2000</p>-->
-            <!--                </div></a>-->
-            <!--            </div>-->
 
         </div>
 
